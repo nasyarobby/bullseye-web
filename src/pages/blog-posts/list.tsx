@@ -1,86 +1,129 @@
-import {
-    DateField,
-    DeleteButton,
-    EditButton,
-    List,
-    MarkdownField,
-    ShowButton,
-    useTable,
-} from "@refinedev/antd";
-import { BaseRecord, IResourceComponentsProps, useMany } from "@refinedev/core";
-import { Space, Table } from "antd";
-import React from "react";
+import { DateField, useTable } from "@refinedev/antd";
+import { IResourceComponentsProps, useGo } from "@refinedev/core";
+import { Button, List, Radio, Table, Tag, theme } from "antd";
+import { JsonView } from "react-json-view-lite";
+import { useState } from "react";
+import { RadioChangeEvent } from "antd/lib";
+import { EyeFilled } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
 
-export const BlogPostList: React.FC<IResourceComponentsProps> = () => {
-    const { tableProps } = useTable({
-        syncWithLocation: true,
-    });
+const { useToken } = theme;
 
-    const { data: categoryData, isLoading: categoryIsLoading } = useMany({
-        resource: "categories",
-        ids: tableProps?.dataSource?.map((item) => item?.category?.id).filter(Boolean) ?? [],
-        queryOptions: {
-            enabled: !!tableProps?.dataSource,
-        },
-    })
+export const JobList: React.FC<IResourceComponentsProps> = () => {
+  const { token } = useToken();
+  const go = useGo();
+  const params = useParams<{name: string}>()
 
+  console.log({params}, "List.tsx")
 
-    return (
-        <List>
-            <Table {...tableProps} rowKey="id">
-                <Table.Column dataIndex="id" title={"ID"} />
-                <Table.Column dataIndex="title" title={"Title"} />
-                <Table.Column
-                    dataIndex="content"
-                    title={"Content"}
-                    render={(value: any) => {
-                        if (!value) return '-'
-                        return <MarkdownField value={value.slice(0, 80) + '...'} />
-                    }}
-                />
-                <Table.Column
-                    dataIndex={"category"}
-                    title={"Category"}
-                    render={(value) =>
-                            categoryIsLoading ? (
-                                <>Loading...</>
-                            ) : (
-                                categoryData?.data?.find(
-                                    (item) => item.id === value?.id,
-                                )?.title    
-                            )
-                    }
-                />
-                <Table.Column dataIndex="status" title={"Status"} />
-                <Table.Column
-                    dataIndex={["createdAt"]}
-                    title={"Created at"}
-                    render={(value: any) => <DateField value={value} />}
-                />
-                <Table.Column
-                    title={"Actions"}
-                    dataIndex="actions"
-                    render={(_, record: BaseRecord) => (
-                        <Space>
-                            <EditButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                            <ShowButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                            <DeleteButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                        </Space>
-                    )}
-                />
-            </Table>
-        </List>
-    );
+  const customStyle: React.CSSProperties = { color: token.colorTextBase };
+
+  const [jobStatus, setJobStatus] = useState<string>("completed");
+  const { tableProps } = useTable({
+    syncWithLocation: true,
+    resource: "queues",
+    pagination: {
+      pageSize: 10,
+    },
+    meta: {
+    //   status: jobStatus,
+    fields: {
+        queue: params?.name
+    }
+    },
+  });
+
+  return (
+    <List>
+      <Radio.Group
+        // defaultValue={jobStatus}
+        style={{
+          marginBottom: "10px",
+        }}
+        value={jobStatus}
+        buttonStyle="solid"
+        onChange={(e: RadioChangeEvent) => {
+          setJobStatus(e.target.value);
+        }}
+      >
+        {[
+          { text: "Completed", value: "completed" },
+          { text: "Active", value: "active" },
+          { text: "Delayed", value: "delayed" },
+          { text: "Waiting", value: "waiting" },
+          { text: "Paused", value: "paused" },
+          { text: "Stuck", value: "stuck" },
+          { text: "Failed", value: "failed" },
+        ].map((status) => {
+          return (
+            <Radio.Button value={status.value} style={customStyle}>
+              {status.text}
+            </Radio.Button>
+          );
+        })}
+      </Radio.Group>
+      <Table
+        {...tableProps}
+        rowKey="label"
+        pagination={{ showSizeChanger: true }}
+        bordered
+        size="small"
+      >
+        <Table.Column dataIndex={"id"} title="ID" />
+        <Table.Column
+          dataIndex="data"
+          title="Raw Data"
+          render={(value: string, record: any) => {
+            return <JsonView data={value}/>;
+          }}
+        />
+        <Table.Column
+          dataIndex={["timestamp"]}
+          title="Timestamp"
+          align="center"
+          render={(value: any) => (
+            <DateField locales="ID" format="ll HH:mm:ss" value={value} />
+          )}
+        />
+        <Table.Column
+          dataIndex={["processedOn"]}
+          title="Processed On"
+          align="center"
+          render={(value: any) => (
+            <DateField locales="ID" format="ll HH:mm:ss" value={value} />
+          )}
+        />
+        <Table.Column
+          dataIndex={["finishedOn"]}
+          title="Finished On"
+          align="center"
+          render={(value: any) => (
+            <DateField locales="ID" format="ll HH:mm:ss" value={value} />
+          )}
+        />
+        <Table.Column
+          dataIndex=""
+          render={(value, record: any, index) => (
+            <Button
+              type="primary"
+              style={{
+                color: token.colorTextBase,
+              }}
+              icon={<EyeFilled />}
+              onClick={() => {
+                go({
+                  to: {
+                    resource: "jobs",
+                    action: "show",
+                    id: record.id,
+                  },
+                  type: "push",
+                });
+              }}
+            ></Button>
+          )}
+        />
+      </Table>
+    </List>
+  );
 };

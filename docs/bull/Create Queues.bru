@@ -1,0 +1,19 @@
+meta {
+  name: Create Queues
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/queues
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "mailtoken",
+    "name": "mailtoken",
+    "connectionId": "redis-production"
+  }
+}

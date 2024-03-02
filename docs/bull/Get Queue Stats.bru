@@ -1,0 +1,19 @@
+meta {
+  name: Get Queue Stats
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3000/queues/mailtoken/stats
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "mailtoken",
+    "name": "mailtoken",
+    "connectionId": "redis-production"
+  }
+}
