@@ -15,12 +15,10 @@ import {
 } from '@refinedev/antd';
 import "@refinedev/antd/dist/reset.css";
 
-import dataProvider from "@refinedev/simple-rest";
 import { App as AntdApp } from "antd"
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import routerBindings, { NavigateToResource, CatchAllNavigate, UnsavedChangesNotifier, DocumentTitleHandler } from "@refinedev/react-router-v6";
-import { BlogPostCreate, BlogPostEdit, BlogPostShow, JobList } from "./pages/blog-posts";
-import { CategoryList, CategoryCreate, CategoryEdit, CategoryShow } from "./pages/categories";
+import { QueueCreate, BlogPostEdit, BlogPostShow, QueuesList } from "./pages/queues";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import { Header } from "./components/header";
 import { Login } from "./pages/login";
@@ -29,9 +27,9 @@ import { ForgotPassword } from "./pages/forgotPassword";
 import { authProvider } from "./authProvider";
 import CustomSider from './components/CustomSider';
 import { appDataProvider } from './data-providers';
-
-
-
+import { ConnectionsList } from './pages/connections/list';
+import { ConnectionCreate } from './pages/connections/create';
+import { JobList } from './pages/jobs';
 
 function App() {
     return (
@@ -52,6 +50,16 @@ function App() {
                                         create: "/queues/create",
                                         edit: "/queues/edit/:id",
                                         show: "/queues/show/:id",
+                                        meta: {
+                                            canDelete: true,
+                                        },
+                                    },
+                                    {
+                                        name: "connections",
+                                        list: "/connections",
+                                        create: "/connections/create",
+                                        edit: "/connections/edit/:id",
+                                        show: "/connections/show/:id",
                                         meta: {
                                             canDelete: true,
                                         },
@@ -84,23 +92,23 @@ function App() {
                                         <Route index element={
                                             <NavigateToResource resource="blog_posts" />
                                         } />
-                                        <Route path="/queues/:name">
-                                            <Route index element={<JobList />} />
-                                            <Route path="create" element={<BlogPostCreate />} />
+                                        <Route path="/queues">
+                                            <Route index element={<QueuesList />} />
+                                            <Route path="create" element={<QueueCreate />} />
                                             <Route path="edit/:id" element={<BlogPostEdit />} />
                                             <Route path="show/:id" element={<BlogPostShow />} />
+                                            <Route path=":name" element={<JobList />}>
+                                                <Route path="create" element={<QueueCreate />} />
+                                                <Route path="edit/:id" element={<BlogPostEdit />} />
+                                                <Route path="show/:id" element={<BlogPostShow />} />
+                                            </Route>
                                         </Route>
-                                        <Route path="/blog-posts">
-                                            <Route index element={<JobList />} />
-                                            <Route path="create" element={<BlogPostCreate />} />
+
+                                        <Route path="/connections">
+                                            <Route index element={<ConnectionsList />} />
+                                            <Route path="create" element={<ConnectionCreate />} />
                                             <Route path="edit/:id" element={<BlogPostEdit />} />
                                             <Route path="show/:id" element={<BlogPostShow />} />
-                                        </Route>
-                                        <Route path="/categories">
-                                            <Route index element={<CategoryList />} />
-                                            <Route path="create" element={<CategoryCreate />} />
-                                            <Route path="edit/:id" element={<CategoryEdit />} />
-                                            <Route path="show/:id" element={<CategoryShow />} />
                                         </Route>
                                         <Route path="*" element={<ErrorComponent />} />
                                     </Route>

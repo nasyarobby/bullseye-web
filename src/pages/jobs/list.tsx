@@ -1,7 +1,7 @@
 import { DateField, useTable } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
 import { Button, List, Radio, Table, Tag, theme } from "antd";
-import { JsonView } from "react-json-view-lite";
+import JsonView from "react-json-view";
 import { useState } from "react";
 import { RadioChangeEvent } from "antd/lib";
 import { EyeFilled } from "@ant-design/icons";
@@ -12,24 +12,23 @@ const { useToken } = theme;
 export const JobList: React.FC<IResourceComponentsProps> = () => {
   const { token } = useToken();
   const go = useGo();
-  const params = useParams<{name: string}>()
-
-  console.log({params}, "List.tsx")
+  const params = useParams<{ name: string }>()
 
   const customStyle: React.CSSProperties = { color: token.colorTextBase };
 
   const [jobStatus, setJobStatus] = useState<string>("completed");
   const { tableProps } = useTable({
     syncWithLocation: true,
+    dataProviderName: "jobs",
     resource: "queues",
     pagination: {
       pageSize: 10,
     },
     meta: {
-    //   status: jobStatus,
-    fields: {
+      status: jobStatus,
+      fields: {
         queue: params?.name
-    }
+      }
     },
   });
 
@@ -52,7 +51,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
           { text: "Delayed", value: "delayed" },
           { text: "Waiting", value: "waiting" },
           { text: "Paused", value: "paused" },
-          { text: "Stuck", value: "stuck" },
+          // { text: "Stuck", value: "stuck" },
           { text: "Failed", value: "failed" },
         ].map((status) => {
           return (
@@ -73,8 +72,8 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex="data"
           title="Raw Data"
-          render={(value: string, record: any) => {
-            return <JsonView data={value}/>;
+          render={(value: object, record: any) => {
+            return <JsonView src={value} collapsed={0} />;
           }}
         />
         <Table.Column

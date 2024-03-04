@@ -65,7 +65,7 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     <Sider
       render={({ items, logout }) => {
         const menuQueues = Object.keys(queues).map(key => {
-          const name = queues[key].config.name
+          const name = queues[key].config.id
           return <Menu.Item
             key={queues[key].config.id}
             icon={<UnorderedListOutlined />}
