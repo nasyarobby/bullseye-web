@@ -1,7 +1,6 @@
 import { useTable, List } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Table, theme } from "antd";
-// import { useParams } from "react-router-dom";
+import { Button, Table, Tag, theme } from "antd";
 import { EyeFilled, ThunderboltFilled as NewIcon } from "@ant-design/icons";
 
 const { useToken } = theme;
@@ -9,9 +8,6 @@ const { useToken } = theme;
 export const QueuesList: React.FC<IResourceComponentsProps> = () => {
   const { token } = useToken();
   const go = useGo();
-  // const params = useParams<{ name: string }>()
-  // const customStyle: React.CSSProperties = { color: token.colorTextBase };
-
   const { tableProps } = useTable({
     syncWithLocation: true,
     resource: "queues",
@@ -54,8 +50,30 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
           title="Connection ID"
         />
         <Table.Column
-          dataIndex=""
-          render={(value, record: any, index) => (
+          dataIndex={["stats", "jobCounts"]}
+          title="Stats"
+          render={(val) => {
+            return <>
+              <Tag>Completed: {val.completed}</Tag>
+              <Tag>Active: {val.active}</Tag>
+              <Tag>Failed: {val.failed}</Tag>
+            </>
+          }}
+        />
+
+        <Table.Column
+          dataIndex={["stats", "workers"]}
+          title="Workers"
+          render={(val) => {
+            return <>
+              {val.length}
+            </>
+          }}
+        />
+        <Table.Column
+          dataIndex="id"
+          render={(value) => (
+            <>
             <Button
               type="primary"
               style={{
@@ -67,12 +85,31 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                   to: {
                     resource: "jobs",
                     action: "list",
-                    id: record.config.id,
+                    id: value,
                   },
                   type: "push",
                 });
               }}
             ></Button>
+
+<Button
+              type="primary"
+              style={{
+                color: token.colorTextBase,
+              }}
+              icon={<EyeFilled />}
+              onClick={() => {
+                go({
+                  to: {
+                    resource: "queues",
+                    action: "edit",
+                    id: value,
+                  },
+                  type: "push",
+                });
+              }}
+            ></Button>
+            </>
           )}
         />
       </Table>

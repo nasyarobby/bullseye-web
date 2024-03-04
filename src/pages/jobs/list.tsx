@@ -6,6 +6,7 @@ import { useState } from "react";
 import { RadioChangeEvent } from "antd/lib";
 import { EyeFilled } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
+import { URL } from "url";
 
 const { useToken } = theme;
 
@@ -17,12 +18,12 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
   const customStyle: React.CSSProperties = { color: token.colorTextBase };
 
   const [jobStatus, setJobStatus] = useState<string>("completed");
-  const { tableProps } = useTable({
+  const { tableProps, tableQueryResult } = useTable({
     syncWithLocation: true,
     dataProviderName: "jobs",
     resource: "queues",
     pagination: {
-      pageSize: 10,
+      pageSize: 50,
     },
     meta: {
       status: jobStatus,
@@ -55,7 +56,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
           { text: "Failed", value: "failed" },
         ].map((status) => {
           return (
-            <Radio.Button value={status.value} style={customStyle}>
+            <Radio.Button key={status.value} value={status.value} style={customStyle}>
               {status.text}
             </Radio.Button>
           );
@@ -64,11 +65,20 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
       <Table
         {...tableProps}
         rowKey="label"
-        pagination={{ showSizeChanger: true }}
         bordered
         size="small"
       >
         <Table.Column dataIndex={"id"} title="ID" />
+
+        {
+          tableQueryResult.data?.dataFields.map(field => {
+            return <Table.Column
+            key={field.columnName}
+              dataIndex={field.jsonPath.split(".")}
+              title={field.columnName}
+            />
+          })
+        }
         <Table.Column
           dataIndex="data"
           title="Raw Data"
@@ -81,9 +91,31 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
           jobStatus === "failed" &&
           <Table.Column
             dataIndex={["failedReason"]}
-            title="Processed On"
+            title="Failed Reason"
+            render={(val, record) => {
+              return <div title={record.stacktrace}>{val}</div>
+            }}
           />
         }
+
+        <Table.Column
+          dataIndex="returnvalue"
+          title="Returnvalue"
+          render={(value: object | null) => {
+            if (value === null) {
+              return "null"
+            }
+
+            if (typeof value === "string") {
+              if(value.startsWith("http"))
+              return <a href={value.toString()} target="__blank">{value.toString()}</a>
+              else
+              return value;
+            }
+
+            return <JsonView src={value} collapsed={0} />;
+          }}
+        />
 
         <Table.Column
           dataIndex={["timestamp"]}

@@ -18,7 +18,7 @@ import "@refinedev/antd/dist/reset.css";
 import { App as AntdApp } from "antd"
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import routerBindings, { NavigateToResource, CatchAllNavigate, UnsavedChangesNotifier, DocumentTitleHandler } from "@refinedev/react-router-v6";
-import { QueueCreate, BlogPostEdit, BlogPostShow, QueuesList } from "./pages/queues";
+import { QueueCreate, QueueEdit, BlogPostShow, QueuesList } from "./pages/queues";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import { Header } from "./components/header";
 import { Login } from "./pages/login";
@@ -95,11 +95,11 @@ function App() {
                                         <Route path="/queues">
                                             <Route index element={<QueuesList />} />
                                             <Route path="create" element={<QueueCreate />} />
-                                            <Route path="edit/:id" element={<BlogPostEdit />} />
+                                            <Route path="edit/:id" element={<QueueEdit />} />
                                             <Route path="show/:id" element={<BlogPostShow />} />
                                             <Route path=":name" element={<JobList />}>
                                                 <Route path="create" element={<QueueCreate />} />
-                                                <Route path="edit/:id" element={<BlogPostEdit />} />
+                                                <Route path="edit/:id" element={<QueueEdit />} />
                                                 <Route path="show/:id" element={<BlogPostShow />} />
                                             </Route>
                                         </Route>
@@ -107,7 +107,7 @@ function App() {
                                         <Route path="/connections">
                                             <Route index element={<ConnectionsList />} />
                                             <Route path="create" element={<ConnectionCreate />} />
-                                            <Route path="edit/:id" element={<BlogPostEdit />} />
+                                            <Route path="edit/:id" element={<QueueEdit />} />
                                             <Route path="show/:id" element={<BlogPostShow />} />
                                         </Route>
                                         <Route path="*" element={<ErrorComponent />} />

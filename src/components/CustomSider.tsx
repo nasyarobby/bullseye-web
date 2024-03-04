@@ -52,7 +52,6 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
 
   useEffect(() => {
     if (!isLoading && Object.keys(queues).length === 0) {
-      console.log("Fetching")
       setIsLoading(true);
       axios.get('/api/queues').then(resp => {
         setQueues(resp.data.queues)

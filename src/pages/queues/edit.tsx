@@ -1,30 +1,66 @@
 import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
-import MDEditor from "@uiw/react-md-editor";
-import { Form, Input, Select } from "antd";
-import React from "react";
+import { Button, Form, Input, Select, Tag } from "antd";
+import React, { useEffect, useState } from "react";
 
-export const BlogPostEdit: React.FC<IResourceComponentsProps> = () => {
-    const { formProps, saveButtonProps, queryResult, formLoading } = useForm({
+export const QueueEdit: React.FC<IResourceComponentsProps> = () => {
+    const { formProps, saveButtonProps, queryResult, formLoading, onFinish } = useForm({
+
     });
 
-    const blogPostsData = queryResult?.data?.data;
+    // const blogPostsData = queryResult?.data?.data;
 
-    const { selectProps: categorySelectProps } = useSelect({
-        resource: "categories",
-        defaultValue: blogPostsData?.category?.id,
-        queryOptions: {
-            enabled: !!blogPostsData?.category?.id,
-        },
+    const { selectProps: connRedisSelectProps } = useSelect({
+        resource: "connections",
+        dataProviderName: "connections",
+        optionLabel: 'friendlyName'
     });
+
+    const [fields, setFields] = useState<string[]>([])
+    const [labels, setLabels] = useState<string[]>([])
+
+    useEffect(() => {
+        if (queryResult?.data?.data?.dataFields) {
+            setLabels(state => {
+                return queryResult.data.data.dataFields.map(row => {
+                    return row.label
+                })
+            })
+
+            setFields(state => {
+                return queryResult.data.data.dataFields.map(row => {
+                    return row.field.join(".")
+                })
+            })
+        }
+    }, [queryResult?.status === "success"])
 
     return (
         <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
-            <Form {...formProps} 
-            layout="vertical">
+            <Form {...formProps} layout="vertical" 
+            onFinish={(values) => {
+                return onFinish({
+                    ...values, 
+                    dataFields: labels.map((s,index) => {
+                        return {label:s, field: fields[index]}
+                    })
+                })
+            }}>
                 <Form.Item
-                    label={"Title"}
-                    name={["title"]}
+                    label={"ID"}
+                    name={["id"]}
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label={"Queue Name"}
+                    name={["queueName"]}
                     rules={[
                         {
                             required: true,
@@ -34,44 +70,56 @@ export const BlogPostEdit: React.FC<IResourceComponentsProps> = () => {
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label={"Content"}
-                    name="content"
+                    label={"Connection"}
+                    name={["connectionId"]}
                     rules={[
                         {
                             required: true,
                         },
                     ]}
                 >
-                    <MDEditor data-color-mode="light" />
+                    <Select {...connRedisSelectProps} />
                 </Form.Item>
-                <Form.Item
-                    label={"Category"}
-                    name={["category", "id"]}
-                    initialValue={formProps?.initialValues?.category?.id}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                >
-                    <Select {...categorySelectProps} />
-                </Form.Item>
-                <Form.Item
-                    label={"Status"}
-                    name={["status"]}
-                    initialValue={"draft"}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                >
-                    <Select
-                        defaultValue={"draft"}
-                        options={[{"value":"draft","label":"Draft"},{"value":"published","label":"Published"},{"value":"rejected","label":"Rejected"}]}
-                        style={{ width: 120 }}
-                    />
-                </Form.Item>
+
+                {
+                    labels.map((l, index) => {
+                        return <>
+                            <Form.Item
+                                label={"Field #" + index}
+                                initialValue={l}
+                            >
+                                <Input value={l} onChange={e => setLabels(state => {
+                                    return [...state.slice(0, index), e.target.value, ...state.slice(index + 1)]
+                                })} />
+                            </Form.Item>
+                            <Form.Item
+                                label={"Value #" + index}
+                                initialValue={fields[index]}
+                            >
+                                <Input value={fields[index]} onChange={e => setFields(state => {
+                                    return [...state.slice(0, index), e.target.value, ...state.slice(index + 1)]
+                                })} />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button onClick={e => {
+                                    setLabels(state => {
+                                        return state.filter((v,i) => i!==index)
+                                    })
+                                    setFields(state => {
+                                        return state.filter((v,i) => i!==index)
+                                    })
+                                }
+                            }>Remove</Button>
+                            </Form.Item>
+                        </>
+                    })
+                }
+                
+                <Button onClick={() => {
+                    setLabels(state => {
+                        return [...state, ""]
+                    })
+                }}>Add</Button>
             </Form>
         </Edit>
     );

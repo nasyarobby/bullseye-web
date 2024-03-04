@@ -16,7 +16,7 @@ const queueDataProvider: (url: string) => DataProvider = (
   }
 
   function handleOne(response: AxiosResponse<{ status: string; data: any }>) {
-    return { data: response.data.data };
+    return { data: response.data };
   }
 
   return {
@@ -29,6 +29,7 @@ const queueDataProvider: (url: string) => DataProvider = (
       const query = {
         page: current,
         limit: pageSize,
+        stats: true,
       };
       return client
         .get(`/${resource}?${stringify(query)}`)
@@ -52,7 +53,7 @@ const queueDataProvider: (url: string) => DataProvider = (
       client.get(`/${params.resource}`).then(handleOne),
     getOne: async (params) =>
       client
-        .get(`/${params.resource}/${params.meta?.queue}/${params.id}`)
+        .get(`/${params.resource}/${params.id}`)
         .then(handleOne),
   };
 };
@@ -66,7 +67,7 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
 
   function handleResponse(response: AxiosResponse) {
       const total = response.data.jobCounts;
-      return { data: response.data.jobs, total };
+      return { data: response.data.jobs, total, dataFields: response.data.dataFields || [] };
   }
 
   function handleOne(response: AxiosResponse<{ status: string; data: any }>) {
@@ -86,6 +87,7 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
       const query = {
         page: current,
         limit: pageSize,
+        stats: true
       };
 
       const queueUrl = queue ? `/${resource}/${queue}/jobs/${status}` : `/${resource}`
@@ -100,7 +102,6 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
         .then(handleOne);
     },
     update: async (params) => {
-      console.log({ params });
       return client
         .post(
           `/${params.resource}/${params.meta?.queue}/${params.id}`,
@@ -112,7 +113,7 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
       client.get(`/${params.resource}`).then(handleOne),
     getOne: async (params) =>
       client
-        .get(`/${params.resource}/${params.meta?.queue}/${params.id}`)
+        .get(`/${params.resource}/${params.id}`)
         .then(handleOne),
   };
 };
@@ -162,7 +163,6 @@ const connectionsDataProvider: (url: string) => DataProvider = (
         .then(handleOne);
     },
     update: async (params) => {
-      console.log({ params });
       return client
         .post(
           `/${params.resource}/${params.meta?.queue}/${params.id}`,
