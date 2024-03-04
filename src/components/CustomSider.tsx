@@ -37,21 +37,21 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     activeItemDisabled && isSelected
       ? { pointerEvents: "none" }
       : {};
-  
+
   const [queues, setQueues] = useState<{
-    [k: string]: { "config": {
+    [k: string]: {
       "id": string
-      "name": string
+      name: string
+      "friendlyName": string
       "connectionId": string
-    },
-    "status": object | null
-  }
+      "status": object | null
+    }
   }>({});
 
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if(!isLoading && Object.keys(queues).length === 0) {
+    if (!isLoading && Object.keys(queues).length === 0) {
       console.log("Fetching")
       setIsLoading(true);
       axios.get('/api/queues').then(resp => {
@@ -64,19 +64,20 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
   return (
     <Sider
       render={({ items, logout }) => {
-        const menuQueues = Object.keys(queues).map(key => {
-          const name = queues[key].config.id
+        const menuQueues = queues ? Object.keys(queues).map(key => {
+          const name = queues[key].friendlyName
+          const id = queues[key].id
           return <Menu.Item
-            key={queues[key].config.id}
+            key={queues[key].id}
             icon={<UnorderedListOutlined />}
             style={linkStyle}
           >
-            <Link to={"/queues/"+name} 
-            style={linkStyle}>
+            <Link to={"/queues/" + id}
+              style={linkStyle}>
               {name}
             </Link>
           </Menu.Item>
-        })
+        }) : []
         return <>
           {menuQueues}
           {items}

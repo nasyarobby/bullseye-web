@@ -76,18 +76,26 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
             return <JsonView src={value} collapsed={0} />;
           }}
         />
+
+        {
+          jobStatus === "failed" &&
+          <Table.Column
+            dataIndex={["failedReason"]}
+            title="Processed On"
+          />
+        }
+
         <Table.Column
           dataIndex={["timestamp"]}
           title="Timestamp"
-          align="center"
           render={(value: any) => (
             <DateField locales="ID" format="ll HH:mm:ss" value={value} />
           )}
         />
+
         <Table.Column
           dataIndex={["processedOn"]}
           title="Processed On"
-          align="center"
           render={(value: any) => (
             <DateField locales="ID" format="ll HH:mm:ss" value={value} />
           )}
@@ -95,7 +103,6 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex={["finishedOn"]}
           title="Finished On"
-          align="center"
           render={(value: any) => (
             <DateField locales="ID" format="ll HH:mm:ss" value={value} />
           )}

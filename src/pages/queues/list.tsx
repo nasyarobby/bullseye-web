@@ -1,10 +1,7 @@
-import { DateField, useTable, List } from "@refinedev/antd";
+import { useTable, List } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Radio, Table, Tag, theme } from "antd";
-import { JsonView } from "react-json-view-lite";
-import { useState } from "react";
-import { RadioChangeEvent } from "antd/lib";
-import { useParams } from "react-router-dom";
+import { Button, Table, theme } from "antd";
+// import { useParams } from "react-router-dom";
 import { EyeFilled, ThunderboltFilled as NewIcon } from "@ant-design/icons";
 
 const { useToken } = theme;
@@ -12,8 +9,8 @@ const { useToken } = theme;
 export const QueuesList: React.FC<IResourceComponentsProps> = () => {
   const { token } = useToken();
   const go = useGo();
-  const params = useParams<{name: string}>()
-  const customStyle: React.CSSProperties = { color: token.colorTextBase };
+  // const params = useParams<{ name: string }>()
+  // const customStyle: React.CSSProperties = { color: token.colorTextBase };
 
   const { tableProps } = useTable({
     syncWithLocation: true,
@@ -22,23 +19,23 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List
-    headerButtons={() => (
-      <Button
-        type="primary"
-        icon={<NewIcon />}
-        onClick={() => {
-          go({
-            to: "create",
-            type: "push",
-          });
-        }}
-        style={{
-          color: token.colorTextBase,
-        }}
-      >
-        Add Queue
-      </Button>
-    )}
+      headerButtons={() => (
+        <Button
+          type="primary"
+          icon={<NewIcon />}
+          onClick={() => {
+            go({
+              to: "create",
+              type: "push",
+            });
+          }}
+          style={{
+            color: token.colorTextBase,
+          }}
+        >
+          Add Queue
+        </Button>
+      )}
     >
       <Table
         {...tableProps}
@@ -47,13 +44,13 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
         bordered
         size="small"
       >
-        <Table.Column dataIndex={["config", "id"]} title="ID" />
+        <Table.Column dataIndex={"friendlyName"} title="Name" />
         <Table.Column
-          dataIndex={["config", "id"]} 
-          title="Queue Name"
+          dataIndex={"queueName"}
+          title="Bull Queue Name"
         />
-<Table.Column
-          dataIndex={["config", "connectionId"]} 
+        <Table.Column
+          dataIndex={"connectionId"}
           title="Connection ID"
         />
         <Table.Column
