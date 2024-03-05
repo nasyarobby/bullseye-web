@@ -1,10 +1,11 @@
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
-import { Button, Form, Input, Select, Tag } from "antd";
+import { Button, Form, Input, Select, Space, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 
 export const QueueEdit: React.FC<IResourceComponentsProps> = () => {
-    const { formProps, saveButtonProps, queryResult, formLoading, onFinish } = useForm({
+    const { formProps, saveButtonProps, queryResult, formLoading } = useForm({
 
     });
 
@@ -16,36 +17,9 @@ export const QueueEdit: React.FC<IResourceComponentsProps> = () => {
         optionLabel: 'friendlyName'
     });
 
-    const [fields, setFields] = useState<string[]>([])
-    const [labels, setLabels] = useState<string[]>([])
-
-    useEffect(() => {
-        if (queryResult?.data?.data?.dataFields) {
-            setLabels(state => {
-                return queryResult.data.data.dataFields.map(row => {
-                    return row.label
-                })
-            })
-
-            setFields(state => {
-                return queryResult.data.data.dataFields.map(row => {
-                    return row.field.join(".")
-                })
-            })
-        }
-    }, [queryResult?.status === "success"])
-
     return (
         <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
-            <Form {...formProps} layout="vertical" 
-            onFinish={(values) => {
-                return onFinish({
-                    ...values, 
-                    dataFields: labels.map((s,index) => {
-                        return {label:s, field: fields[index]}
-                    })
-                })
-            }}>
+            <Form {...formProps} layout="vertical">
                 <Form.Item
                     label={"ID"}
                     name={["id"]}
@@ -81,45 +55,42 @@ export const QueueEdit: React.FC<IResourceComponentsProps> = () => {
                     <Select {...connRedisSelectProps} />
                 </Form.Item>
 
-                {
-                    labels.map((l, index) => {
-                        return <>
-                            <Form.Item
-                                label={"Field #" + index}
-                                initialValue={l}
-                            >
-                                <Input value={l} onChange={e => setLabels(state => {
-                                    return [...state.slice(0, index), e.target.value, ...state.slice(index + 1)]
-                                })} />
-                            </Form.Item>
-                            <Form.Item
-                                label={"Value #" + index}
-                                initialValue={fields[index]}
-                            >
-                                <Input value={fields[index]} onChange={e => setFields(state => {
-                                    return [...state.slice(0, index), e.target.value, ...state.slice(index + 1)]
-                                })} />
-                            </Form.Item>
+                <Form.List name="dataFields">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(({ key, name, ...restField }) => (
+                                <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'columnName']}
+                                        rules={[{ required: true, message: 'Missing column name' }]}
+                                    >
+                                        <Input placeholder="Column name" />
+                                    </Form.Item>
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'jsonPath']}
+                                        rules={[{ required: true, message: 'Missing JSON path' }]}
+                                    >
+                                        <Input placeholder="Property" />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                </Space>
+                            ))}
                             <Form.Item>
-                                <Button onClick={e => {
-                                    setLabels(state => {
-                                        return state.filter((v,i) => i!==index)
-                                    })
-                                    setFields(state => {
-                                        return state.filter((v,i) => i!==index)
-                                    })
-                                }
-                            }>Remove</Button>
+                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                    Add Column
+                                </Button>
                             </Form.Item>
                         </>
-                    })
-                }
-                
-                <Button onClick={() => {
-                    setLabels(state => {
-                        return [...state, ""]
-                    })
-                }}>Add</Button>
+                    )}
+                </Form.List>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+
             </Form>
         </Edit>
     );

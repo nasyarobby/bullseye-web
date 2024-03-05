@@ -1,7 +1,14 @@
 import { useTable, List } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
 import { Button, Table, Tag, theme } from "antd";
-import { EyeFilled, ThunderboltFilled as NewIcon } from "@ant-design/icons";
+import {
+  EditFilled as EditIcon,
+  EyeFilled as ViewIcon,
+  ThunderboltFilled as NewIcon
+} from "@ant-design/icons";
+import { WebSocketDemo } from "./WebSocket";
+import { useState } from "react";
+import useWebSocket from "react-use-websocket";
 
 const { useToken } = theme;
 
@@ -12,6 +19,36 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
     syncWithLocation: true,
     resource: "queues",
   });
+
+  const [dataSource, setDataSource] = useState<
+    { id: string, stats: any }[]
+  >([]);
+
+  const { lastMessage, readyState } = useWebSocket('ws://localhost:3000/ws/queues-stats', {
+    reconnectAttempts: 5,
+    shouldReconnect: () => true,
+    reconnectInterval: 10*1000,
+    onMessage: (e) => {
+        const data = JSON.parse(e.data);
+        setDataSource(state => {
+          const newArr = state.filter(row => row.id !== data.queueId);
+          return [...newArr, {id: data.queueId, stats: data.count || null}]
+        })
+    }
+  });
+
+  const modifiedDataSource = tableProps.dataSource?.map(row => {
+    const statsFromWs = dataSource.find(r =>r.id === row.id)
+    return {
+      ...row, stats: {
+        ...row.stats,
+        jobCounts: statsFromWs ? statsFromWs.stats : row.stats.jobCounts
+      }
+    }
+  }
+  ) || [];
+
+  // console.log({modifiedDataSource})
 
   return (
     <List
@@ -35,6 +72,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
     >
       <Table
         {...tableProps}
+        dataSource={modifiedDataSource}
         rowKey="label"
         pagination={{ showSizeChanger: true }}
         bordered
@@ -54,9 +92,10 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
           title="Stats"
           render={(val) => {
             return <>
-              <Tag>Completed: {val.completed}</Tag>
-              <Tag>Active: {val.active}</Tag>
-              <Tag>Failed: {val.failed}</Tag>
+              <Tag>Completed: {val?.completed ?? "-"}</Tag>
+              <Tag>Active: {val?.active ?? "-"}</Tag>
+              <Tag>Waiting: {val?.waiting ?? "-"}</Tag>
+              <Tag>Failed: {val?.failed ?? "-"}</Tag>
             </>
           }}
         />
@@ -66,7 +105,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
           title="Workers"
           render={(val) => {
             return <>
-              {val.length}
+              {val?.length ?? "-"}
             </>
           }}
         />
@@ -74,41 +113,41 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="id"
           render={(value) => (
             <>
-            <Button
-              type="primary"
-              style={{
-                color: token.colorTextBase,
-              }}
-              icon={<EyeFilled />}
-              onClick={() => {
-                go({
-                  to: {
-                    resource: "jobs",
-                    action: "list",
-                    id: value,
-                  },
-                  type: "push",
-                });
-              }}
-            ></Button>
+              <Button
+                type="primary"
+                style={{
+                  color: token.colorTextBase,
+                }}
+                icon={<ViewIcon />}
+                onClick={() => {
+                  go({
+                    to: {
+                      resource: "jobs",
+                      action: "list",
+                      id: value,
+                    },
+                    type: "push",
+                  });
+                }}
+              ></Button>
 
-<Button
-              type="primary"
-              style={{
-                color: token.colorTextBase,
-              }}
-              icon={<EyeFilled />}
-              onClick={() => {
-                go({
-                  to: {
-                    resource: "queues",
-                    action: "edit",
-                    id: value,
-                  },
-                  type: "push",
-                });
-              }}
-            ></Button>
+              <Button
+                type="primary"
+                style={{
+                  color: token.colorTextBase,
+                }}
+                icon={<EditIcon />}
+                onClick={() => {
+                  go({
+                    to: {
+                      resource: "queues",
+                      action: "edit",
+                      id: value,
+                    },
+                    type: "push",
+                  });
+                }}
+              ></Button>
             </>
           )}
         />

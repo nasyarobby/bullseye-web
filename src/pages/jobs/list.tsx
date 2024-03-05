@@ -6,7 +6,9 @@ import { useState } from "react";
 import { RadioChangeEvent } from "antd/lib";
 import { EyeFilled } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { URL } from "url";
+import {Typography} from "antd";
+
+const {Paragraph} = Typography; 
 
 const { useToken } = theme;
 
@@ -110,7 +112,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
               if(value.startsWith("http"))
               return <a href={value.toString()} target="__blank">{value.toString()}</a>
               else
-              return value;
+              return <Paragraph ellipsis={false}>{value}</Paragraph>
             }
 
             return <JsonView src={value} collapsed={0} />;

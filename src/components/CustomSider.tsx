@@ -1,10 +1,10 @@
-import { AppstoreOutlined, ContainerOutlined, DesktopOutlined, MailOutlined, PieChartOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { ThemedLayoutV2, Sider, RefineThemedLayoutV2SiderProps } from "@refinedev/antd";
 import { Menu } from "antd";
 import { MenuProps } from "antd/lib";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { PiQueueBold as QueueIcon } from "react-icons/pi";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -68,7 +68,7 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
           const id = queues[key].id
           return <Menu.Item
             key={queues[key].id}
-            icon={<UnorderedListOutlined />}
+            icon={<QueueIcon />}
             style={linkStyle}
           >
             <Link to={"/queues/" + id}

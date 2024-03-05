@@ -1,7 +1,5 @@
 import {
     Refine,
-    GitHubBanner,
-    WelcomePage,
     Authenticated,
 } from '@refinedev/core';
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
@@ -14,6 +12,7 @@ import {
     , ThemedSiderV2
 } from '@refinedev/antd';
 import "@refinedev/antd/dist/reset.css";
+import { SiRedis as RedisIcon } from "react-icons/si";
 
 import { App as AntdApp } from "antd"
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
@@ -30,11 +29,11 @@ import { appDataProvider } from './data-providers';
 import { ConnectionsList } from './pages/connections/list';
 import { ConnectionCreate } from './pages/connections/create';
 import { JobList } from './pages/jobs';
+import liveProvider from './live-providers';
 
 function App() {
     return (
         <BrowserRouter>
-            <GitHubBanner />
             <RefineKbarProvider>
                 <ColorModeContextProvider>
                     <AntdApp>
@@ -43,6 +42,7 @@ function App() {
                                 notificationProvider={useNotificationProvider}
                                 routerProvider={routerBindings}
                                 authProvider={authProvider}
+                            
                                 resources={[
                                     {
                                         name: "queues",
@@ -55,11 +55,23 @@ function App() {
                                         },
                                     },
                                     {
+                                        name: "jobs",
+                                        list: "/queues/:id",
+                                        create: "/queues/:id/create",
+                                        edit: "/queues/:id/edit/:id",
+                                        show: "/queues/:id/show/:id",
+                                        meta: {
+                                            canDelete: true,
+                                            hide: true
+                                        },
+                                    },
+                                    {
                                         name: "connections",
                                         list: "/connections",
                                         create: "/connections/create",
                                         edit: "/connections/edit/:id",
                                         show: "/connections/show/:id",
+                                        icon: <RedisIcon />,
                                         meta: {
                                             canDelete: true,
                                         },
