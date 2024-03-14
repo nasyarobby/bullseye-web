@@ -1,7 +1,8 @@
 import { DataProvider } from "@refinedev/core";
-import { IDataMultipleContextProvider } from "@refinedev/core/dist/interfaces";
+import { BaseRecord, CreateParams, CreateResponse, IDataMultipleContextProvider } from "@refinedev/core/dist/interfaces";
 import axios, { AxiosResponse } from "axios";
 import { stringify } from "query-string";
+
 
 const queueDataProvider: (url: string) => DataProvider = (
   url: string
@@ -15,7 +16,7 @@ const queueDataProvider: (url: string) => DataProvider = (
       return { data: queues.map(key => response.data.queues[key]), total: queues.length };
   }
 
-  function handleOne(response: AxiosResponse<{ status: string; data: any }>) {
+  function handleOne(response: AxiosResponse<{ queue: {id: string} }>) {
     return { data: response.data };
   }
 
@@ -23,7 +24,7 @@ const queueDataProvider: (url: string) => DataProvider = (
     getApiUrl: () => {
       return url;
     },
-    getList: async ({ resource, pagination, meta }) => {
+    getList: async ({ resource, pagination }) => {
       const { current = 1, pageSize = 5 } = pagination ?? {};
 
       const query = {
@@ -71,7 +72,7 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
   }
 
   function handleOne(response: AxiosResponse<{ status: string; data: any }>) {
-    return { data: response.data.data };
+    return { data: response.data };
   }
 
   return {
@@ -87,10 +88,11 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
       const query = {
         page: current,
         limit: pageSize,
-        stats: true
+        stats: true,
+        status,
       };
 
-      const queueUrl = queue ? `/${resource}/${queue}/jobs/${status}` : `/${resource}`
+      const queueUrl = queue ? `/${resource}/${queue}/jobs` : `/${resource}`
 
       return client
         .get(`${queueUrl}?${stringify(query)}`)
@@ -109,12 +111,18 @@ const queueJobsDataProvider: (url: string) => DataProvider = (
         )
         .then(handleOne);
     },
-    deleteOne: async (params) =>
-      client.get(`/${params.resource}`).then(handleOne),
-    getOne: async (params) =>
-      client
-        .get(`/${params.resource}/${params.id}`)
-        .then(handleOne),
+    deleteOne: async (params) => {
+      console.log(params)
+      return client
+      .delete(`/queues/${params.meta.name}/jobs/${params.id}`)
+      .then(handleOne)
+    },
+
+    getOne: async (params) => {
+      return client
+      .get(`/queues/${params.meta.name}/jobs/${params.id}`)
+      .then(handleOne)
+    }
   };
 };
 
