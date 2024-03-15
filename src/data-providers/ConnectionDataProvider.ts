@@ -44,8 +44,8 @@ const connectionDataProvider: DataProviderInitiator = (url) => {
         total }
       }
   
-    function handleOne(response: AxiosResponse<{data: Connection}>) {
-      return { data: response.data.data };
+    function handleOne(response: AxiosResponse<Connection>) {
+      return { data: response.data };
     }
   
     return {
@@ -53,7 +53,6 @@ const connectionDataProvider: DataProviderInitiator = (url) => {
         return url;
       },
       getList: async ({ resource }) => {
-
         return client
           .get(`/${resource}`)
           .then(handleResponse);
@@ -66,16 +65,16 @@ const connectionDataProvider: DataProviderInitiator = (url) => {
       update: async (params) => {
         return client
           .post(
-            `/${params.resource}/${params.meta?.queue}/${params.id}`,
+            `/${params.resource}/${params.id}`,
             params.variables
           )
           .then(handleOne);
       },
       deleteOne: async (params) =>
-        client.get(`/${params.resource}`).then(handleOne),
+        client.delete(`/${params.resource}/${params.id}`).then(handleOne),
       getOne: async (params) =>
         client
-          .get(`/${params.resource}/${params.meta?.queue}/${params.id}`)
+          .get(`/${params.resource}/${params.id}`)
           .then(handleOne),
     };
 };

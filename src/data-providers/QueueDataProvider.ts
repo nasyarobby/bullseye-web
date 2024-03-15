@@ -61,7 +61,6 @@ const queueDataProvider: DataProviderInitiator = (url) => {
                 .then(handleOne);
         },
         update: async (params) => {
-            console.log({ params });
             return client
                 .post(
                     `/${params.resource}/${params.meta?.queue}/${params.id}`,
