@@ -1,7 +1,8 @@
 import { useTable, List } from "@refinedev/antd";
-import { IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Radio, Table, Tag, theme } from "antd";
+import { GetListResponse, IResourceComponentsProps, useGo } from "@refinedev/core";
+import { Button, Table, theme } from "antd";
 import { EyeFilled, ThunderboltFilled as NewIcon } from "@ant-design/icons";
+import { Connection } from "../../@types";
 
 const { useToken } = theme;
 
@@ -9,7 +10,7 @@ export const ConnectionsList: React.FC<IResourceComponentsProps> = () => {
   const go = useGo();
   const { token } = useToken();
 
-  const { tableProps } = useTable({
+  const { tableProps } = useTable<GetListResponse<Connection>>({
     syncWithLocation: true,
     dataProviderName: "connections",
     resource: "connections",
@@ -46,16 +47,22 @@ export const ConnectionsList: React.FC<IResourceComponentsProps> = () => {
         size="small"
       >
         <Table.Column dataIndex={"id"} title="ID" />
-        <Table.Column dataIndex={"config"} title="Host" render={(v) => v.host+":"+v.port}/>
+        <Table.Column dataIndex={"config"} title="Host" render={(v: Connection["config"]) => v.host+":"+v.port+"/db"+v.db}/>
         <Table.Column dataIndex={"status"} title="Status" />
         <Table.Column
-          dataIndex=""
-          render={(value, record: any, index) => (
+          dataIndex="id"
+          render={(value: Connection["id"]) => (
             <Button
               type="primary"
               icon={<EyeFilled />}
               onClick={() => {
-                return true;
+                go({
+                  to: {
+                    action: "edit",
+                    resource: "connections",
+                    id: value
+                  }
+                })
               }}
             ></Button>
           )}

@@ -5,10 +5,6 @@ import {
 import axios, { AxiosResponse } from "axios";
 import { Connection, ConnectionListApiResponse } from "../@types";
 
-type DataType = {
-    id: string
-}
-
 type Variables = {
     hello: string
 }
@@ -29,7 +25,7 @@ interface MyDataProviderInterface<D> {
     deleteOne: (params: DeleteOneParams<Variables> & ParamsMeta) => Promise<DeleteOneResponse<D>>;
 }
 
-type DataProviderInitiator = (url: string) => MyDataProviderInterface<DataType>
+type DataProviderInitiator = (url: string) => MyDataProviderInterface<Connection>
 
 const connectionDataProvider: DataProviderInitiator = (url) => {
     const client = axios.create({
