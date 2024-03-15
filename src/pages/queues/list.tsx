@@ -3,10 +3,12 @@ import { IResourceComponentsProps, useGo } from "@refinedev/core";
 import { Button, Table, Tag, theme } from "antd";
 import {
   EditFilled as EditIcon,
-  EyeFilled as ViewIcon,
   ThunderboltFilled as NewIcon
 } from "@ant-design/icons";
-import { WebSocketDemo } from "./WebSocket";
+import { FaBars as ViewIcon } from 'react-icons/fa';
+import { FaChartPie as StatsIcon } from 'react-icons/fa';
+
+
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
 
@@ -24,21 +26,21 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
     { id: string, stats: any }[]
   >([]);
 
-  const { lastMessage, readyState } = useWebSocket('ws://localhost:3000/ws/queues-stats', {
+  const { lastMessage, readyState } = useWebSocket('ws://localhost:3001/ws/queues-stats', {
     reconnectAttempts: 5,
     shouldReconnect: () => true,
-    reconnectInterval: 10*1000,
+    reconnectInterval: 10 * 1000,
     onMessage: (e) => {
-        const data = JSON.parse(e.data);
-        setDataSource(state => {
-          const newArr = state.filter(row => row.id !== data.queueId);
-          return [...newArr, {id: data.queueId, stats: data.count || null}]
-        })
+      const data = JSON.parse(e.data);
+      setDataSource(state => {
+        const newArr = state.filter(row => row.id !== data.queueId);
+        return [...newArr, { id: data.queueId, stats: data.count || null }]
+      })
     }
   });
 
   const modifiedDataSource = tableProps.dataSource?.map(row => {
-    const statsFromWs = dataSource.find(r =>r.id === row.id)
+    const statsFromWs = dataSource.find(r => r.id === row.id)
     return {
       ...row, stats: {
         ...row.stats,
@@ -47,8 +49,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
     }
   }
   ) || [];
-
-  // console.log({modifiedDataSource})
 
   return (
     <List
@@ -112,7 +112,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex="id"
           render={(value) => (
-            <>
+            <div style={{ display: "flex", gap: "4px" }}>
               <Button
                 type="primary"
                 style={{
@@ -129,7 +129,21 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                     type: "push",
                   });
                 }}
-              ></Button>
+              />
+
+              <Button
+                type="primary"
+                style={{
+                  color: token.colorTextBase,
+                }}
+                icon={<StatsIcon />}
+                onClick={() => {
+                  go({
+                    to: "/queue-stats/"+value,
+                    type: "push",
+                  });
+                }}
+              />
 
               <Button
                 type="primary"
@@ -147,8 +161,8 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                     type: "push",
                   });
                 }}
-              ></Button>
-            </>
+              />
+            </div>
           )}
         />
       </Table>
