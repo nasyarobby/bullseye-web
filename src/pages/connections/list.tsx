@@ -1,8 +1,8 @@
-import { useTable, List } from "@refinedev/antd";
+import { useTable, List, DeleteButton } from "@refinedev/antd";
 import { GetListResponse, IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Table, theme } from "antd";
-import { EyeFilled, ThunderboltFilled as NewIcon } from "@ant-design/icons";
+import { Button, Flex, Table, theme } from "antd";
 import { Connection } from "../../@types";
+import { DeleteIcon, EditIcon, NewConnectionIcon, RedisDisconnectedIcon } from "../../components/Icons";
 
 const { useToken } = theme;
 
@@ -10,51 +10,60 @@ export const ConnectionsList: React.FC<IResourceComponentsProps> = () => {
   const go = useGo();
   const { token } = useToken();
 
-  const { tableProps } = useTable<GetListResponse<Connection>>({
+  const { tableProps } = useTable<Connection>({
     syncWithLocation: true,
     dataProviderName: "connections",
     resource: "connections",
     pagination: {
-      pageSize: 10,
+      mode: "off"
     },
   });
 
+
   return (
     <List
-    headerButtons={() => (
-      <Button
-        type="primary"
-        icon={<NewIcon />}
-        onClick={() => {
-          go({
-            to: "create",
-            type: "push",
-          });
-        }}
-        style={{
-          color: token.colorTextBase,
-        }}
-      >
-        New Connection
-      </Button>
-    )}
+      headerButtons={() => (
+        <Button
+          type="primary"
+          icon={<NewConnectionIcon />}
+          onClick={() => {
+            go({
+              to: "create",
+              type: "push",
+            });
+          }}
+          style={{
+            color: token.colorTextBase,
+          }}
+        >
+          New Connection
+        </Button>
+      )}
     >
       <Table
         {...tableProps}
-        rowKey="label"
-        pagination={{ showSizeChanger: true }}
+        dataSource={tableProps.dataSource?.toSorted((a, b) => {
+          if (a.id.toLocaleLowerCase() > b.id.toLocaleLowerCase()) return 1;
+          if (a.id.toLocaleLowerCase() < b.id.toLocaleLowerCase()) return -1;
+          return 0;
+
+        })}
+        rowKey="id"
         bordered
         size="small"
       >
         <Table.Column dataIndex={"id"} title="ID" />
-        <Table.Column dataIndex={"config"} title="Host" render={(v: Connection["config"]) => v.host+":"+v.port+"/db"+v.db}/>
-        <Table.Column dataIndex={"status"} title="Status" />
+        <Table.Column dataIndex={"config"} title="Host" render={(v: Connection["config"]) => v.host + ":" + v.port + "/db" + v.db} />
+        <Table.Column dataIndex={"status"} title="Status" render={(v: string) => {
+          if (v === "connecting" || v === "reconnecting") return <><RedisDisconnectedIcon /> {v}</>
+          return <>{v}</>
+        }} />
         <Table.Column
           dataIndex="id"
           render={(value: Connection["id"]) => (
-            <Button
+            <Flex gap={"10px"}><Button
               type="primary"
-              icon={<EyeFilled />}
+              icon={<EditIcon />}
               onClick={() => {
                 go({
                   to: {
@@ -65,6 +74,8 @@ export const ConnectionsList: React.FC<IResourceComponentsProps> = () => {
                 })
               }}
             ></Button>
+              <DeleteButton hideText={true} recordItemId={value} resource="connections" dataProviderName="connections" icon={<DeleteIcon />}></DeleteButton>
+            </Flex>
           )}
         />
       </Table>

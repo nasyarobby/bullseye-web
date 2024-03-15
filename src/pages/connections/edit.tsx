@@ -1,16 +1,24 @@
-import { Create, useForm } from "@refinedev/antd";
+import { Edit, useForm } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
 import { Form, Input, Select } from "antd";
 import React from "react";
+import { Connection } from "../../@types";
 
-export const ConnectionCreate: React.FC<IResourceComponentsProps> = () => {
-    const { formProps, saveButtonProps } = useForm({
+export const ConnectionEdit: React.FC<IResourceComponentsProps> = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { formProps, saveButtonProps } = useForm<any, any, Connection>({
+        dataProviderName: "connections"
     });
 
+    const connection= (formProps.initialValues as {connection?:Connection});
+    const initialValues = connection?.connection?.config
     return (
-        <Create saveButtonProps={saveButtonProps}>
-            <Form {...formProps} layout="vertical">
-            <Form.Item
+        <Edit saveButtonProps={saveButtonProps} >
+            <Form
+                {...formProps}
+                layout="vertical"
+                initialValues={initialValues}>
+                <Form.Item
                     label={"Connection's name"}
                     name={["name"]}
                     rules={[
@@ -25,7 +33,6 @@ export const ConnectionCreate: React.FC<IResourceComponentsProps> = () => {
                 <Form.Item
                     label={"Host"}
                     name={["host"]}
-                    initialValue={"127.0.0.1"}
                     rules={[
                         {
                             required: true,
@@ -39,14 +46,13 @@ export const ConnectionCreate: React.FC<IResourceComponentsProps> = () => {
                 <Form.Item
                     label={"Port"}
                     name={["port"]}
-                    initialValue={"6379"}
                     rules={[
                         {
                             required: true,
                         },
                     ]}
                 >
-                    <Input type="number"/>
+                    <Input type="number" />
                 </Form.Item>
 
                 <Form.Item
@@ -59,15 +65,14 @@ export const ConnectionCreate: React.FC<IResourceComponentsProps> = () => {
                 <Form.Item
                     label={"db"}
                     name={["db"]}
-                    initialValue={0}
                 >
                     <Select
-                    defaultValue={0}
-                    options={[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(n => ({value: n, label: n.toString()}))}
-                    style={{ width: 120 }}
-                />
+                        defaultValue={0}
+                        options={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(n => ({ value: n, label: n.toString() }))}
+                        style={{ width: 120 }}
+                    />
                 </Form.Item>
             </Form>
-        </Create>
+        </Edit>
     );
 };
