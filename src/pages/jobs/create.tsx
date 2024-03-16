@@ -1,7 +1,7 @@
 import { Create, useForm, useSelect } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
 import MDEditor from "@uiw/react-md-editor";
-import { Form, Input, Select } from "antd";
+import { Form, Select } from "antd";
 import React from "react";
 
 export const BlogPostCreate: React.FC<IResourceComponentsProps> = () => {
@@ -17,7 +17,7 @@ export const BlogPostCreate: React.FC<IResourceComponentsProps> = () => {
         <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
                 <Form.Item
-                    label={"Title"}
+                    label={"JobData"}
                     name={["title"]}
                     rules={[
                         {
@@ -25,7 +25,7 @@ export const BlogPostCreate: React.FC<IResourceComponentsProps> = () => {
                         },
                     ]}
                 >
-                    <Input />
+                    <Textarea />
                 </Form.Item>
                 <Form.Item
                     label={"Content"}
@@ -59,11 +59,11 @@ export const BlogPostCreate: React.FC<IResourceComponentsProps> = () => {
                         },
                     ]}
                 >
-                <Select
-                    defaultValue={"draft"}
-                    options={[{"value":"draft","label":"Draft"},{"value":"published","label":"Published"},{"value":"rejected","label":"Rejected"}]}
-                    style={{ width: 120 }}
-                />
+                    <Select
+                        defaultValue={"draft"}
+                        options={[{ "value": "draft", "label": "Draft" }, { "value": "published", "label": "Published" }, { "value": "rejected", "label": "Rejected" }]}
+                        style={{ width: 120 }}
+                    />
                 </Form.Item>
             </Form>
         </Create>

@@ -42,6 +42,7 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     [k: string]: {
       "id": string
       name: string
+      slug: string
       "friendlyName": string
       "connectionId": string
       "status": object | null
@@ -65,13 +66,13 @@ const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
       render={({ items, logout }) => {
         const menuQueues = queues ? Object.keys(queues).map(key => {
           const name = queues[key].friendlyName
-          const id = queues[key].id
+          const slug = queues[key].slug
           return <Menu.Item
             key={queues[key].id}
             icon={<QueueIcon />}
             style={linkStyle}
           >
-            <Link to={"/queues/" + id}
+            <Link to={"/queues/" + slug}
               style={linkStyle}>
               {name}
             </Link>

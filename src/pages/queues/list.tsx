@@ -1,16 +1,10 @@
 import { useTable, List } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
 import { Button, Table, Tag, theme } from "antd";
-import {
-  EditFilled as EditIcon,
-  ThunderboltFilled as NewIcon
-} from "@ant-design/icons";
-import { FaBars as ViewIcon } from 'react-icons/fa';
-import { FaChartPie as StatsIcon } from 'react-icons/fa';
-
 
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
+import { EditIcon, MonitorQueueIcon, NewQueueIcon, ViewIcon } from "../../components/Icons";
 
 const { useToken } = theme;
 
@@ -20,6 +14,9 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps } = useTable({
     syncWithLocation: true,
     resource: "queues",
+    pagination: {
+      mode: "off"
+    }
   });
 
   const [dataSource, setDataSource] = useState<
@@ -55,7 +52,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
       headerButtons={() => (
         <Button
           type="primary"
-          icon={<NewIcon />}
+          icon={<NewQueueIcon />}
           onClick={() => {
             go({
               to: "create",
@@ -74,7 +71,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
         {...tableProps}
         dataSource={modifiedDataSource}
         rowKey="label"
-        pagination={{ showSizeChanger: true }}
         bordered
         size="small"
       >
@@ -136,7 +132,8 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                 style={{
                   color: token.colorTextBase,
                 }}
-                icon={<StatsIcon />}
+                icon={<MonitorQueueIcon />}
+                title="Monitor Real-Time"
                 onClick={() => {
                   go({
                     to: "/queue-stats/"+value,

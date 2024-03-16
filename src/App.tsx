@@ -28,8 +28,11 @@ import CustomSider from './components/CustomSider';
 import { appDataProvider } from './data-providers';
 import { ConnectionsList } from './pages/connections/list';
 import { ConnectionCreate } from './pages/connections/create';
-import { JobList } from './pages/jobs';
-import liveProvider from './live-providers';
+import { JobList, JobShow } from './pages/jobs';
+import { PM2Start } from './pages/pm2/PM2Start';
+import { PM2Connect } from './pages/pm2/PM2Connect';
+import { QueueStats } from './pages/queues/stats';
+import { ConnectionEdit } from './pages/connections/edit';
 
 function App() {
     return (
@@ -42,7 +45,7 @@ function App() {
                                 notificationProvider={useNotificationProvider}
                                 routerProvider={routerBindings}
                                 authProvider={authProvider}
-                            
+
                                 resources={[
                                     {
                                         name: "queues",
@@ -58,8 +61,8 @@ function App() {
                                         name: "jobs",
                                         list: "/queues/:id",
                                         create: "/queues/:id/create",
-                                        edit: "/queues/:id/edit/:id",
-                                        show: "/queues/:id/show/:id",
+                                        edit: "/queues/:queueName/edit/:id",
+                                        show: "/queues/:queueName/show/:id",
                                         meta: {
                                             canDelete: true,
                                             hide: true
@@ -101,27 +104,35 @@ function App() {
                                             </Authenticated>
                                         }
                                     >
-                                        <Route index element={
-                                            <NavigateToResource resource="blog_posts" />
-                                        } />
                                         <Route path="/queues">
                                             <Route index element={<QueuesList />} />
                                             <Route path="create" element={<QueueCreate />} />
                                             <Route path="edit/:id" element={<QueueEdit />} />
                                             <Route path="show/:id" element={<BlogPostShow />} />
-                                            <Route path=":name" element={<JobList />}>
+                                            <Route path=":name" >
+                                                <Route index element={<JobList />} />
                                                 <Route path="create" element={<QueueCreate />} />
                                                 <Route path="edit/:id" element={<QueueEdit />} />
-                                                <Route path="show/:id" element={<BlogPostShow />} />
+                                                <Route path="job/:id" element={<JobShow />} />
                                             </Route>
+                                        </Route>
+
+                                        <Route path="/queue-stats/:name">
+                                            <Route index element={<QueueStats />} />
                                         </Route>
 
                                         <Route path="/connections">
                                             <Route index element={<ConnectionsList />} />
                                             <Route path="create" element={<ConnectionCreate />} />
-                                            <Route path="edit/:id" element={<QueueEdit />} />
+                                            <Route path="edit/:id" element={<ConnectionEdit />} />
                                             <Route path="show/:id" element={<BlogPostShow />} />
                                         </Route>
+
+                                        <Route path="/pm2">
+                                            <Route index element={<PM2Start />} />
+                                            <Route path="connect/:stream" element={<PM2Connect />} />
+                                        </Route>
+
                                         <Route path="*" element={<ErrorComponent />} />
                                     </Route>
                                     <Route

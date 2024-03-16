@@ -2,7 +2,7 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Create, useForm, useSelect } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
 import { Button, Form, Input, Select, Space } from "antd";
-import React, { useState } from "react";
+import React  from "react";
 
 export const QueueCreate: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps } = useForm({
@@ -17,21 +17,21 @@ export const QueueCreate: React.FC<IResourceComponentsProps> = () => {
     return (
         <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical"
-               >
+            >
                 <Form.Item
-                    label={"ID"}
-                    name={["id"]}
+                    label={"Display name"}
+                    name={["friendlyName"]}
                     rules={[
                         {
                             required: true,
                         },
                     ]}
                 >
-                    <Input />
+                    <Input placeholder=""/>
                 </Form.Item>
 
                 <Form.Item
-                    label={"Queue Name"}
+                    label={"Bull Queue's Name"}
                     name={["queueName"]}
                     rules={[
                         {
@@ -39,7 +39,7 @@ export const QueueCreate: React.FC<IResourceComponentsProps> = () => {
                         },
                     ]}
                 >
-                    <Input />
+                    <Input placeholder="some:queue:key" />
                 </Form.Item>
                 <Form.Item
                     label={"Connection"}
@@ -83,11 +83,6 @@ export const QueueCreate: React.FC<IResourceComponentsProps> = () => {
                         </>
                     )}
                 </Form.List>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
             </Form>
         </Create>
     );

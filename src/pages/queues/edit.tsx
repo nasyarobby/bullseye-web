@@ -1,24 +1,19 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
-import { Button, Form, Input, Select, Space, Tag } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Form, Input, Select, Space } from "antd";
 
 export const QueueEdit: React.FC<IResourceComponentsProps> = () => {
-    const { formProps, saveButtonProps, queryResult, formLoading } = useForm({
+    const { formProps, saveButtonProps, formLoading } = useForm({
 
     });
-
-    // const blogPostsData = queryResult?.data?.data;
-
     const { selectProps: connRedisSelectProps } = useSelect({
         resource: "connections",
         dataProviderName: "connections",
         optionLabel: 'friendlyName'
     });
-
     return (
-        <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
+        <Edit saveButtonProps={saveButtonProps} isLoading={formLoading} dataProviderName="queues" resource="queue">
             <Form {...formProps} layout="vertical">
                 <Form.Item
                     label={"ID"}
@@ -85,12 +80,6 @@ export const QueueEdit: React.FC<IResourceComponentsProps> = () => {
                         </>
                     )}
                 </Form.List>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-
             </Form>
         </Edit>
     );
