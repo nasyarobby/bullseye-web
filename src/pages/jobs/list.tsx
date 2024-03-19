@@ -4,7 +4,7 @@ import { Button, Image, Radio, Table, theme } from "antd";
 import JsonView from "react-json-view";
 import { useState } from "react";
 import { RadioChangeEvent } from "antd/lib";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Typography } from "antd";
 import { CreateJobIcon, ViewIcon } from "../../components/Icons";
 import QueuePauseButton from "../../components/QueuePauseButton";
@@ -18,9 +18,11 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
   const { token } = useToken();
   const go = useGo();
   const params = useParams<{ name: string }>()
+  const {search} = useLocation();
+  const searchParams = new URLSearchParams(search)
   const customStyle: React.CSSProperties = { color: token.colorTextBase };
 
-  const [jobStatus, setJobStatus] = useState<string>("completed");
+  const [jobStatus, setJobStatus] = useState<string>(searchParams.get("status") || "completed");
   const { tableProps, tableQueryResult } = useTable<Job>({
     syncWithLocation: true,
     dataProviderName: "jobs",
@@ -192,6 +194,9 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
                 go({
                   to: "/queues/" + params?.name + "/job/" + value,
                   type: "push",
+                  query: {
+                    status: jobStatus
+                  }
                 });
               }}
             ></Button>

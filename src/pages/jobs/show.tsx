@@ -1,17 +1,14 @@
 import {
     DateField,
     DeleteButton,
-    MarkdownField,
-    NumberField,
     Show,
     TextField,
 } from "@refinedev/antd";
-import { IResourceComponentsProps, useShow } from "@refinedev/core";
+import { IResourceComponentsProps, useGo, useShow } from "@refinedev/core";
 import { Divider, Typography } from "antd";
-import { off } from "process";
 import React from "react";
 import JsonView from "react-json-view"
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -21,10 +18,10 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
     });
     const params = useParams();
     const { data, isLoading } = queryResult;
-
-    console.log({ queryResult, params })
-
     const record = data?.data;
+    const go = useGo();
+    const {search} = useLocation();
+    const searchParams = new URLSearchParams(search)
 
     if (!record) {
         return <Show isLoading={true} />
@@ -41,22 +38,28 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
                         </>
                     }
 
-                    if (key === "returnvalue") {
+                    if (key === "returnvalue" || key === "progress") {
                         const data = record[key];
-
 
                         if (!data || typeof data === "string") {
                             return <>
                                 <Title level={5}>{key}</Title>
                                 <TextField value={data === null ? "null" : data}></TextField>
                             </>
-                            
+
                         }
 
                         return <>
-                                <Title level={5}>{key}</Title>
-                                <JsonView src={record ? record[key] : {}} />
-                            </>
+                            <Title level={5}>{key}</Title>
+                            <JsonView src={record ? record[key] : {}} />
+                        </>
+                    }
+
+                    if (key === 'stacktrace') {
+                        return <>
+                            <Title level={5}>{key}</Title>
+                            <pre>{record[key]}</pre>
+                        </>
                     }
 
                     if (["timestamp", "finishedOn", "processedOn"].includes(key)) {
@@ -70,10 +73,16 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
                         <TextField value={record ? record[key].toString() : ""}></TextField>
                     </>
                 })}
-                <Divider />
-                <DeleteButton onSuccess={() => {
-                    navigation.goBack();
-                }} recordItemId={record.id} resource="jobs" dataProviderName="jobs" meta={{fields: {name: params.name}}}/>
+            <Divider />
+            <DeleteButton
+                onSuccess={() => {
+                    go({
+                        to: `/queues/${params.name}?status=${searchParams.get("status") || "completed"}`
+                    })
+                }}
+                recordItemId={record.id}
+                resource="jobs" dataProviderName="jobs"
+                meta={{ name: params.name }} />
         </Show>
     );
 };
