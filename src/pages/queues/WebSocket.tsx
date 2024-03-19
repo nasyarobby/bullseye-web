@@ -1,8 +1,12 @@
-import { Avatar, List, Timeline } from 'antd';
+import { Avatar, Button, List, Timeline } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { FaBullhorn, FaHardHat, FaRobot } from 'react-icons/fa';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { JobList } from '../jobs';
+import Title from 'antd/lib/typography/Title';
+import { PageHeader } from '@refinedev/antd';
+import { NewQueueIcon } from '../../components/Icons';
+import QueuePauseButton from '../../components/QueuePauseButton';
 
 export const WebSocketDemo = (props: React.PropsWithChildren) => {
   //Public API that will echo messages sent to it back to the client
@@ -32,7 +36,7 @@ export const WebSocketDemo = (props: React.PropsWithChildren) => {
   );
 };
 
-export const WsQueueStats = (props: React.PropsWithChildren<{ name: string }>) => {
+export const LiveQueueProcessing = (props: React.PropsWithChildren<{ name?: string }>) => {
 
   const [workers, setWorkers] = useState<{ name: string, job: string }[]>([])
   const [events, setEvents] = useState<{ children: React.ReactNode, color: string }[]>([])
@@ -81,7 +85,8 @@ export const WsQueueStats = (props: React.PropsWithChildren<{ name: string }>) =
 
   return (
     <div>
-
+      <PageHeader title="Queue Name" subTitle="Live">
+          <QueuePauseButton queueSlug={props.name}/>
       <List
         itemLayout="horizontal"
         dataSource={workers}
@@ -90,7 +95,7 @@ export const WsQueueStats = (props: React.PropsWithChildren<{ name: string }>) =
             <List.Item.Meta
               avatar={<Avatar style={item.job ? { backgroundColor: "green" } : {}} icon={<FaRobot />} />}
               title={<a href="https://ant.design">{item.name}</a>}
-              description={item.job || 'idle'}
+              description={item.job ? <>Processing job <span style={{fontWeight: "bold"}}>{item.job}</span></> : 'idle'}
             />
           </List.Item>
         )}
@@ -100,6 +105,7 @@ export const WsQueueStats = (props: React.PropsWithChildren<{ name: string }>) =
         reverse={true}
         items={events}
       />
+      </PageHeader>
     </div>
   );
 };

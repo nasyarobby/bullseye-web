@@ -33,6 +33,7 @@ import { PM2Start } from './pages/pm2/PM2Start';
 import { PM2Connect } from './pages/pm2/PM2Connect';
 import { QueueStats } from './pages/queues/stats';
 import { ConnectionEdit } from './pages/connections/edit';
+import { WarningZone } from './pages/queues/WarningZone';
 
 function App() {
     return (
@@ -119,6 +120,10 @@ function App() {
 
                                         <Route path="/queue-stats/:name">
                                             <Route index element={<QueueStats />} />
+                                        </Route>
+
+                                        <Route path="/warning-zone/:name">
+                                            <Route index element={<WarningZone />} />
                                         </Route>
 
                                         <Route path="/connections">

@@ -26,7 +26,6 @@ interface MyDataProviderInterface<D> {
 type DataProviderInitiator = (url: string) => MyDataProviderInterface<DataType>
 
 const queueDataProvider: DataProviderInitiator = (url) => {
-
     const client = axios.create({
         baseURL: url
     });
@@ -69,7 +68,7 @@ const queueDataProvider: DataProviderInitiator = (url) => {
                 .then(handleOne);
         },
         deleteOne: async (params) =>
-            client.get(`/${params.resource}`).then(handleOne),
+            client.delete(`/${params.resource}/${params.id}`).then(handleOne),
         getOne: async (params) =>
             client
                 .get(`/${params.resource}/${params.id}`)

@@ -1,14 +1,13 @@
 import { DateField, useTable, List } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Image, Radio, Table, Tag, theme } from "antd";
+import { Button, Flex, Image, Radio, Space, Table, Tag, theme } from "antd";
 import JsonView from "react-json-view";
 import { useState } from "react";
 import { RadioChangeEvent } from "antd/lib";
-import { EyeFilled,
-  ThunderboltFilled as NewIcon
-} from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { Typography } from "antd";
+import { CreateJobIcon, PauseQueueIcon, ViewIcon } from "../../components/Icons";
+import QueuePauseButton from "../../components/QueuePauseButton";
 
 const { Paragraph } = Typography;
 
@@ -18,7 +17,6 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
   const { token } = useToken();
   const go = useGo();
   const params = useParams<{ name: string }>()
-
   const customStyle: React.CSSProperties = { color: token.colorTextBase };
 
   const [jobStatus, setJobStatus] = useState<string>("completed");
@@ -37,24 +35,30 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
+  console.log(params)
+
   return (
     <List
       headerButtons={() => (
-        <Button
-          type="primary"
-          icon={<NewIcon />}
-          onClick={() => {
-            go({
-              to: "create",
-              type: "push",
-            });
-          }}
-          style={{
-            color: token.colorTextBase,
-          }}
-        >
-          Add Queue
-        </Button>
+        <>
+          <Button
+            type="primary"
+            icon={<CreateJobIcon />}
+            onClick={() => {
+              go({
+                to: "create",
+                type: "push",
+              });
+            }}
+            style={{
+              color: token.colorTextBase,
+            }}
+          >
+            Create Job
+          </Button>
+
+          <QueuePauseButton queueSlug={params.name} />
+        </>
       )}
     >
       <Radio.Group
@@ -124,7 +128,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
             dataIndex={["failedReason"]}
             title="Failed Reason"
             render={(val, record) => {
-              return <div style={{ width: '200px', wordWrap: "break-word", display: "inline-block"}} title={record.stacktrace}>{val}</div>
+              return <div style={{ width: '200px', wordWrap: "break-word", display: "inline-block" }} title={record.stacktrace}>{val}</div>
             }}
           />
         }
@@ -141,9 +145,9 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
               if (value.startsWith("http"))
                 return <a href={value.toString()} target="__blank">{value.toString()}</a>
               else
-                return <Paragraph style={{wordWrap: "break-word"}} ellipsis={false}>{value}</Paragraph>
+                return <Paragraph style={{ wordWrap: "break-word" }} ellipsis={false}>{value}</Paragraph>
             }
-            else if(typeof value === 'number') {
+            else if (typeof value === 'number') {
               return value;
             }
 
@@ -185,7 +189,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
               style={{
                 color: token.colorTextBase,
               }}
-              icon={<EyeFilled />}
+              icon={<ViewIcon />}
               onClick={() => {
                 go({
                   to: "/queues/" + params?.name + "/job/" + value,

@@ -1,13 +1,13 @@
 import { IResourceComponentsProps } from "@refinedev/core";
 import { Col, Row, Statistic } from "antd";
-import { WsQueueStats } from "./WebSocket";
+import { LiveQueueProcessing } from "./WebSocket";
 import { useParams } from "react-router-dom";
 
 export const QueueStats: React.FC<IResourceComponentsProps> = () => {
-    const params = useParams();
+    const params = useParams<{ name: string }>()
 
     console.log(params);
     return <Row gutter={16}>
-            <WsQueueStats name={params.name}/>
+        <LiveQueueProcessing name={params.name} />
     </Row>
 }

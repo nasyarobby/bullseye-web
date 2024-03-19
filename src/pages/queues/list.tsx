@@ -1,10 +1,11 @@
-import { useTable, List } from "@refinedev/antd";
+import { useTable, List, DeleteButton } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
 import { Button, Table, Tag, theme } from "antd";
 
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
-import { EditIcon, MonitorQueueIcon, NewQueueIcon, ViewIcon } from "../../components/Icons";
+import { EditIcon, MonitorQueueIcon, NewQueueIcon, ViewIcon, WarningZoneIcon } from "../../components/Icons";
+import QueuePauseButton from "../../components/QueuePauseButton";
 
 const { useToken } = theme;
 
@@ -91,6 +92,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
               <Tag>Completed: {val?.completed ?? "-"}</Tag>
               <Tag>Active: {val?.active ?? "-"}</Tag>
               <Tag>Waiting: {val?.waiting ?? "-"}</Tag>
+              <Tag>Paused: {val?.paused ?? "-"}</Tag>
               <Tag>Failed: {val?.failed ?? "-"}</Tag>
             </>
           }}
@@ -106,7 +108,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
           }}
         />
         <Table.Column
-          dataIndex="id"
+          dataIndex="slug"
           render={(value) => (
             <div style={{ display: "flex", gap: "4px" }}>
               <Button
@@ -159,6 +161,22 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                   });
                 }}
               />
+              <QueuePauseButton queueSlug={value} hideLabel={true}/>
+              <Button
+                type="primary"
+                title="Warning zone"
+                style={{
+                  color: token.colorTextBase,
+                }}
+                icon={<WarningZoneIcon />}
+                onClick={() => {
+                  go({
+                    to: "/warning-zone/"+value,
+                    type: "push",
+                  });
+                }}
+              />
+              <DeleteButton hideText recordItemId={value} resource="queues"/>
             </div>
           )}
         />

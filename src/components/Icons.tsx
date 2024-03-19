@@ -2,20 +2,28 @@ import {
     FaExclamationCircle as RedisDisconnectedIcon,
     FaPencilAlt as EditIcon,
     FaPlug as NewConnectionIcon,
-    FaTrash as DeleteIcon ,
-    FaEye as ViewIcon
+    FaTasks as NewQueueIcon,
+    FaEye as ViewIcon,
+    FaTrashAlt as DeleteIcon,
+    FaPause as PauseQueueIcon,
+    FaPlay as ResumeQueueIcon,
+    FaExclamationTriangle as WarningZoneIcon
 } from "react-icons/fa";
 
 import { LuMonitorPlay as MonitorQueueIcon } from "react-icons/lu";
 
-import { GiBullHorns as NewQueueIcon } from "react-icons/gi";
+import { MdAddTask as CreateJobIcon } from "react-icons/md";
 
 export {
     NewConnectionIcon,
     NewQueueIcon,
     MonitorQueueIcon,
+    PauseQueueIcon,
+    ResumeQueueIcon,
+    CreateJobIcon, 
     ViewIcon,
     EditIcon,
     DeleteIcon,
-    RedisDisconnectedIcon
+    RedisDisconnectedIcon,
+    WarningZoneIcon
 }
