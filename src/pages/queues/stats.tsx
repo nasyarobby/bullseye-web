@@ -1,5 +1,5 @@
 import { IResourceComponentsProps } from "@refinedev/core";
-import { Col, Row, Statistic } from "antd";
+import { Row } from "antd";
 import { LiveQueueProcessing } from "./WebSocket";
 import { useParams } from "react-router-dom";
 

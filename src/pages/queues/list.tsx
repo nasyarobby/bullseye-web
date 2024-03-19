@@ -21,18 +21,18 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
   });
 
   const [dataSource, setDataSource] = useState<
-    { id: string, stats: any }[]
+    { id: string, stats: object | null }[]
   >([]);
 
-  const { lastMessage, readyState } = useWebSocket('ws://localhost:3001/ws/queues-stats', {
+  useWebSocket('ws://localhost:3001/ws/queues-stats', {
     reconnectAttempts: 5,
     shouldReconnect: () => true,
     reconnectInterval: 10 * 1000,
     onMessage: (e) => {
-      const data = JSON.parse(e.data);
+      const data = JSON.parse(e.data) as {queueId: string, count: object | null};
       setDataSource(state => {
         const newArr = state.filter(row => row.id !== data.queueId);
-        return [...newArr, { id: data.queueId, stats: data.count || null }]
+        return [...newArr, { id: data.queueId, stats: data.count }]
       })
     }
   });
@@ -89,11 +89,11 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
           title="Stats"
           render={(val) => {
             return <>
-              <Tag>Completed: {val?.completed ?? "-"}</Tag>
-              <Tag>Active: {val?.active ?? "-"}</Tag>
+              <Tag color="green">Completed: {val?.completed ?? "-"}</Tag>
+              <Tag color="blue">Active: {val?.active ?? "-"}</Tag>
               <Tag>Waiting: {val?.waiting ?? "-"}</Tag>
               <Tag>Paused: {val?.paused ?? "-"}</Tag>
-              <Tag>Failed: {val?.failed ?? "-"}</Tag>
+              <Tag color="red">Failed: {val?.failed ?? "-"}</Tag>
             </>
           }}
         />
@@ -138,7 +138,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                 title="Monitor Real-Time"
                 onClick={() => {
                   go({
-                    to: "/queue-stats/"+value,
+                    to: "/queue-stats/" + value,
                     type: "push",
                   });
                 }}
@@ -161,7 +161,7 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                   });
                 }}
               />
-              <QueuePauseButton queueSlug={value} hideLabel={true}/>
+              <QueuePauseButton queueSlug={value} hideLabel={true} />
               <Button
                 type="primary"
                 title="Warning zone"
@@ -171,12 +171,12 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
                 icon={<WarningZoneIcon />}
                 onClick={() => {
                   go({
-                    to: "/warning-zone/"+value,
+                    to: "/warning-zone/" + value,
                     type: "push",
                   });
                 }}
               />
-              <DeleteButton hideText recordItemId={value} resource="queues"/>
+              <DeleteButton hideText recordItemId={value} resource="queues" />
             </div>
           )}
         />
