@@ -16,38 +16,38 @@ export interface QueueApiResponse {
 }
 
 export interface QueueElement {
-    id:           string;
+    id: string;
     connectionId: string;
-    queueName:    string;
+    queueName: string;
     friendlyName: string;
-    dataFields?:  DataField[];
-    queue:        QueueQueue;
-    stats:        Stats;
+    dataFields?: DataField[];
+    queue: QueueQueue;
+    stats: Stats;
 }
 
 export interface DataField {
     columnName: string;
-    jsonPath:   string;
+    jsonPath: string;
 }
 
 export interface QueueQueue {
-    name:                  string;
-    token:                 string;
-    keyPrefix:             string;
-    clients:               any[];
-    clientInitialized:     boolean;
-    _events:               Events;
-    _eventsCount:          number;
-    _initializing:         Initializing;
-    handlers:              Initializing;
-    processing:            any[];
-    retrieving:            number;
-    drained:               boolean;
-    settings:              Settings;
-    timers:                Timers;
-    keys:                  Keys;
+    name: string;
+    token: string;
+    keyPrefix: string;
+    clients: any[];
+    clientInitialized: boolean;
+    _events: Events;
+    _eventsCount: number;
+    _initializing: Initializing;
+    handlers: Initializing;
+    processing: any[];
+    retrieving: number;
+    drained: boolean;
+    settings: Settings;
+    timers: Timers;
+    keys: Keys;
     subscriberInitialized: boolean;
-    registeredEvents:      RegisteredEvents;
+    registeredEvents: RegisteredEvents;
 }
 
 export interface Events {
@@ -55,100 +55,100 @@ export interface Events {
 }
 
 export interface Keys {
-    "":              string;
-    active:          string;
-    wait:            string;
-    waiting:         string;
-    paused:          string;
-    resumed:         string;
-    "meta-paused":   string;
-    id:              string;
-    delayed:         string;
-    priority:        string;
+    "": string;
+    active: string;
+    wait: string;
+    waiting: string;
+    paused: string;
+    resumed: string;
+    "meta-paused": string;
+    id: string;
+    delayed: string;
+    priority: string;
     "stalled-check": string;
-    completed:       string;
-    failed:          string;
-    stalled:         string;
-    repeat:          string;
-    limiter:         string;
-    drained:         string;
-    progress:        string;
+    completed: string;
+    failed: string;
+    stalled: string;
+    repeat: string;
+    limiter: string;
+    drained: string;
+    progress: string;
 }
 
 export interface RegisteredEvents {
-    waiting:   Initializing;
+    waiting: Initializing;
     completed: Initializing;
 }
 
 export interface Settings {
-    lockDuration:      number;
-    stalledInterval:   number;
-    maxStalledCount:   number;
-    guardInterval:     number;
+    lockDuration: number;
+    stalledInterval: number;
+    maxStalledCount: number;
+    guardInterval: number;
     retryProcessDelay: number;
-    drainDelay:        number;
+    drainDelay: number;
     backoffStrategies: Initializing;
     isSharedChildPool: boolean;
-    lockRenewTime:     number;
+    lockRenewTime: number;
 }
 
 export interface Timers {
-    idle:      boolean;
+    idle: boolean;
     listeners: any[];
-    timers:    Initializing;
+    timers: Initializing;
 }
 
 export interface Stats {
     jobCounts: JobCounts;
-    workers:   Worker[];
+    workers: Worker[];
 }
 
 export interface JobCounts {
-    waiting:   number;
-    active:    number;
+    waiting: number;
+    active: number;
     completed: number;
-    failed:    number;
-    delayed:   number;
-    paused:    number;
+    failed: number;
+    delayed: number;
+    paused: number;
 }
 
 export interface Worker {
-    id:    string;
-    addr:  string;
+    id: string;
+    addr: string;
     laddr: string;
 }
 
 export interface JobsListApiResponse {
     dataFields: DataField[];
-    jobCounts:  number;
-    jobs:       Job[];
+    jobCounts: number;
+    jobs: Job[];
 }
 
 export interface DataField {
     columnName: string;
-    jsonPath:   string;
+    jsonPath: string;
 }
 
 export interface Job {
-    id:            string;
-    name:          Name;
-    data:          Data;
-    opts:          Opts;
-    progress:      number;
-    delay:         number;
-    timestamp:     number;
-    attemptsMade:  number;
-    stacktrace:    string[];
-    returnvalue:   string;
-    finishedOn:    number;
-    processedOn:   number;
+    id: string;
+    name: Name;
+    data: Data;
+    opts: Opts;
+    progress: number;
+    delay: number;
+    timestamp: number;
+    attemptsMade: number;
+    stacktrace: string[];
+    returnvalue: string;
+    finishedOn: number;
+    processedOn: number;
     failedReason?: string;
 }
 
 export interface Data {
-    prompt:   string;
-    nsfw:     boolean;
-    user:     string;
+    prompt: string;
+    nsfw: boolean;
+    user: string;
     powerups: number;
 }
 
@@ -157,8 +157,8 @@ export enum Name {
 }
 
 export interface Opts {
-    attempts:  number;
-    delay:     number;
+    attempts: number;
+    delay: number;
     timestamp: number;
 }
 
@@ -167,114 +167,114 @@ export interface ConnectionListApiResponse {
 }
 
 export interface Connection {
-    id:         string;
-    config:     Config;
-    redis:      Redis;
-    bclient:    any[];
+    id: string;
+    config: Config;
+    redis: Redis;
+    bclient: any[];
     subscriber: PokedexSubscriber;
-    status:     string;
+    status: string;
 }
 
 export interface Config {
     name: string;
     host: string;
     port: string;
-    db:   number;
+    db: number;
 }
 
 export interface Redis {
-    options:               Options;
-    scriptsSet:            { [key: string]: ScriptsSet };
-    addedBuiltinSet:       AutoPipelines;
-    status:                string;
-    isCluster:             boolean;
-    reconnectTimeout:      null;
-    connectionEpoch:       number;
-    retryAttempts:         number;
-    manuallyClosing:       boolean;
-    _autoPipelines:        AutoPipelines;
+    options: Options;
+    scriptsSet: { [key: string]: ScriptsSet };
+    addedBuiltinSet: AutoPipelines;
+    status: string;
+    isCluster: boolean;
+    reconnectTimeout: null;
+    connectionEpoch: number;
+    retryAttempts: number;
+    manuallyClosing: boolean;
+    _autoPipelines: AutoPipelines;
     _runningAutoPipelines: AutoPipelines;
-    _events:               AutoPipelines;
-    _eventsCount:          number;
-    commandQueue:          Queue;
-    offlineQueue:          Queue;
-    connector:             Connector;
-    condition:             RedisCondition;
-    stream:                Stream;
+    _events: AutoPipelines;
+    _eventsCount: number;
+    commandQueue: Queue;
+    offlineQueue: Queue;
+    connector: Connector;
+    condition: RedisCondition;
+    stream: Stream;
 }
 
 export interface Queue {
-    _head:         number;
-    _tail:         number;
+    _head: number;
+    _tail: number;
     _capacityMask: number;
-    _list:         null[];
+    _list: null[];
 }
 
 export interface RedisCondition {
-    select:     number;
-    auth:       null;
+    select: number;
+    auth: null;
     subscriber: boolean;
 }
 
 export interface Connector {
-    connecting:        boolean;
+    connecting: boolean;
     disconnectTimeout: number;
-    options:           Options;
-    stream:            Stream;
+    options: Options;
+    stream: Stream;
 }
 
 export interface Options {
-    name:                          string;
-    host:                          string;
-    port:                          number;
-    db:                            number;
-    enableReadyCheck:              boolean;
-    maxRetriesPerRequest:          null;
-    family:                        number;
-    connectTimeout:                number;
-    disconnectTimeout:             number;
-    keepAlive:                     number;
-    noDelay:                       boolean;
-    connectionName:                null;
-    sentinels:                     null;
-    role:                          string;
-    natMap:                        null;
-    enableTLSForSentinelMode:      boolean;
-    updateSentinels:               boolean;
-    failoverDetector:              boolean;
-    username:                      null;
-    password:                      null;
-    enableOfflineQueue:            boolean;
-    autoResubscribe:               boolean;
+    name: string;
+    host: string;
+    port: number;
+    db: number;
+    enableReadyCheck: boolean;
+    maxRetriesPerRequest: null;
+    family: number;
+    connectTimeout: number;
+    disconnectTimeout: number;
+    keepAlive: number;
+    noDelay: boolean;
+    connectionName: null;
+    sentinels: null;
+    role: string;
+    natMap: null;
+    enableTLSForSentinelMode: boolean;
+    updateSentinels: boolean;
+    failoverDetector: boolean;
+    username: null;
+    password: null;
+    enableOfflineQueue: boolean;
+    autoResubscribe: boolean;
     autoResendUnfulfilledCommands: boolean;
-    lazyConnect:                   boolean;
-    keyPrefix:                     string;
-    reconnectOnError:              null;
-    readOnly:                      boolean;
-    stringNumbers:                 boolean;
-    maxLoadingRetryTime:           number;
-    enableAutoPipelining:          boolean;
+    lazyConnect: boolean;
+    keyPrefix: string;
+    reconnectOnError: null;
+    readOnly: boolean;
+    stringNumbers: boolean;
+    maxLoadingRetryTime: number;
+    enableAutoPipelining: boolean;
     autoPipeliningIgnoredCommands: any[];
-    sentinelMaxConnections:        number;
+    sentinelMaxConnections: number;
 }
 
 export interface Stream {
-    connecting:               boolean;
-    _hadError:                boolean;
-    _parent:                  null;
-    _host:                    null;
+    connecting: boolean;
+    _hadError: boolean;
+    _parent: null;
+    _host: null;
     _closeAfterHandlingError: boolean;
-    _events:                  Events;
-    _readableState:           ReadableState;
-    _writableState:           WritableState;
-    allowHalfOpen:            boolean;
-    _eventsCount:             number;
-    _sockname:                null;
-    _pendingData:             null;
-    _pendingEncoding:         string;
-    server:                   null;
-    _server:                  null;
-    timeout:                  number;
+    _events: Events;
+    _readableState: ReadableState;
+    _writableState: WritableState;
+    allowHalfOpen: boolean;
+    _eventsCount: number;
+    _sockname: null;
+    _pendingData: null;
+    _pendingEncoding: string;
+    server: null;
+    _server: null;
+    timeout: number;
 }
 
 export interface Events {
@@ -282,55 +282,55 @@ export interface Events {
 }
 
 export interface ReadableState {
-    highWaterMark:     number;
-    buffer:            any[];
-    bufferIndex:       number;
-    length:            number;
-    pipes:             any[];
+    highWaterMark: number;
+    buffer: any[];
+    bufferIndex: number;
+    length: number;
+    pipes: any[];
     awaitDrainWriters: null;
 }
 
 export interface WritableState {
     highWaterMark: number;
-    length:        number;
-    corked:        number;
-    writelen:      number;
+    length: number;
+    corked: number;
+    writelen: number;
     bufferedIndex: number;
-    pendingcb:     number;
+    pendingcb: number;
 }
 
 export interface ScriptsSet {
-    lua:          string;
+    lua: string;
     numberOfKeys: number;
-    keyPrefix:    string;
-    readOnly:     boolean;
-    sha:          string;
+    keyPrefix: string;
+    readOnly: boolean;
+    sha: string;
 }
 
 export interface PokedexSubscriber {
-    options:               Options;
-    scriptsSet:            AutoPipelines;
-    addedBuiltinSet:       AutoPipelines;
-    status:                string;
-    isCluster:             boolean;
-    reconnectTimeout:      null;
-    connectionEpoch:       number;
-    retryAttempts:         number;
-    manuallyClosing:       boolean;
-    _autoPipelines:        AutoPipelines;
+    options: Options;
+    scriptsSet: AutoPipelines;
+    addedBuiltinSet: AutoPipelines;
+    status: string;
+    isCluster: boolean;
+    reconnectTimeout: null;
+    connectionEpoch: number;
+    retryAttempts: number;
+    manuallyClosing: boolean;
+    _autoPipelines: AutoPipelines;
     _runningAutoPipelines: AutoPipelines;
-    _events:               AutoPipelines;
-    _eventsCount:          number;
-    commandQueue:          Queue;
-    offlineQueue:          Queue;
-    connector:             Connector;
-    condition:             SubscriberCondition;
-    stream:                Stream;
+    _events: AutoPipelines;
+    _eventsCount: number;
+    commandQueue: Queue;
+    offlineQueue: Queue;
+    connector: Connector;
+    condition: SubscriberCondition;
+    stream: Stream;
 }
 
 export interface SubscriberCondition {
-    select:     number;
-    auth:       null;
+    select: number;
+    auth: null;
     subscriber: ConditionSubscriber;
 }
 
@@ -339,17 +339,26 @@ export interface ConditionSubscriber {
 }
 
 export interface Set {
-    subscribe:  Subscribe;
+    subscribe: Subscribe;
     psubscribe: Psubscribe;
     ssubscribe: AutoPipelines;
 }
 
 export interface Psubscribe {
     "bull:comicxyz:download-chapters:waiting*"?: boolean;
-    "bull:bing:img:waiting*"?:                   boolean;
+    "bull:bing:img:waiting*"?: boolean;
 }
 
 export interface Subscribe {
     "bull:comicxyz:download-chapters:completed"?: boolean;
-    "bull:bing:img:completed"?:                   boolean;
+    "bull:bing:img:completed"?: boolean;
+}
+
+export interface WsLiveQueueProcessingMsgPayload {
+    type: "workers" | "onActive" | "onCompleted" | "onFailed",
+    data: {
+        workers: { name: string, job: string }[]
+        id: string
+        returnValue: string
+    }
 }
