@@ -1,5 +1,5 @@
 import { useTable, List, DeleteButton } from "@refinedev/antd";
-import { GetListResponse, IResourceComponentsProps, useGo } from "@refinedev/core";
+import { IResourceComponentsProps, useGo } from "@refinedev/core";
 import { Button, Flex, Table, theme } from "antd";
 import { Connection } from "../../@types";
 import { DeleteIcon, EditIcon, NewConnectionIcon, RedisDisconnectedIcon } from "../../components/Icons";

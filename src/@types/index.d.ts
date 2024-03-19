@@ -119,7 +119,7 @@ export interface Worker {
 }
 
 export interface JobsListApiResponse {
-    dataFields: DataField[];
+    dataFields?: DataField[];
     jobCounts: number;
     jobs: Job[];
 }

@@ -1,13 +1,14 @@
 import { DateField, useTable, List } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Flex, Image, Radio, Space, Table, Tag, theme } from "antd";
+import { Button, Image, Radio, Table, theme } from "antd";
 import JsonView from "react-json-view";
 import { useState } from "react";
 import { RadioChangeEvent } from "antd/lib";
 import { useParams } from "react-router-dom";
 import { Typography } from "antd";
-import { CreateJobIcon, PauseQueueIcon, ViewIcon } from "../../components/Icons";
+import { CreateJobIcon, ViewIcon } from "../../components/Icons";
 import QueuePauseButton from "../../components/QueuePauseButton";
+import { Job } from "../../@types";
 
 const { Paragraph } = Typography;
 
@@ -20,7 +21,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
   const customStyle: React.CSSProperties = { color: token.colorTextBase };
 
   const [jobStatus, setJobStatus] = useState<string>("completed");
-  const { tableProps, tableQueryResult } = useTable({
+  const { tableProps, tableQueryResult } = useTable<Job>({
     syncWithLocation: true,
     dataProviderName: "jobs",
     resource: "queues",
@@ -29,13 +30,8 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
     },
     meta: {
       status: jobStatus,
-      fields: {
-        queue: params?.name
-      }
     },
   });
-
-  console.log(params)
 
   return (
     <List
@@ -97,7 +93,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column dataIndex={"id"} title="ID" />
 
         {
-          tableQueryResult.data?.dataFields.map(field => {
+          tableQueryResult.data?.dataFields.map((field: { columnName: string, jsonPath: string, type: string }) => {
             return <Table.Column
               key={field.columnName}
               dataIndex={field.jsonPath.split(".")}
@@ -117,7 +113,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex="data"
           title="Raw Data"
-          render={(value: object, record: any) => {
+          render={(value: object) => {
             return <JsonView src={value} collapsed={0} />;
           }}
         />
@@ -127,8 +123,10 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
           <Table.Column
             dataIndex={["failedReason"]}
             title="Failed Reason"
-            render={(val, record) => {
-              return <div style={{ width: '200px', wordWrap: "break-word", display: "inline-block" }} title={record.stacktrace}>{val}</div>
+            render={(val, record: Job) => {
+              return <div
+                style={{ width: '200px', wordWrap: "break-word", display: "inline-block" }}
+                title={record.stacktrace.join("\n")}>{val}</div>
             }}
           />
         }
@@ -136,7 +134,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex="returnvalue"
           title="Returnvalue"
-          render={(value: object | null) => {
+          render={(value: null | string | number | object) => {
             if (value === null) {
               return "null"
             }
@@ -158,7 +156,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex={["timestamp"]}
           title="Timestamp"
-          render={(value: any) => (
+          render={(value: string) => (
             <DateField locales="ID" format="ll HH:mm:ss" value={value} />
           )}
         />
@@ -166,7 +164,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex={["processedOn"]}
           title="Processed On"
-          render={(value: any) => (
+          render={(value: string | null) => (
             value === null ? '-' : <DateField locales="ID" format="ll HH:mm:ss" value={value} />
           )}
         />
@@ -175,7 +173,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
           <Table.Column
             dataIndex={["finishedOn"]}
             title="Finished On"
-            render={(value: any) => (
+            render={(value: string | null) => (
               <DateField locales="ID" format="ll HH:mm:ss" value={value} />
             )}
           />
@@ -183,7 +181,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
 
         <Table.Column
           dataIndex="id"
-          render={(value, record: any, index) => (
+          render={(value: string) => (
             <Button
               type="primary"
               style={{

@@ -52,7 +52,7 @@ const jobDataProvider: DataProviderInitiator = (url) => {
         },
         getList: async ({ resource, pagination, meta }) => {
             const status = meta?.status || "completed";
-            const queue = meta?.fields?.queue || "";
+            const queue = meta?.name || "";
 
             const { current = 1, pageSize = 5 } = pagination ?? {};
 
