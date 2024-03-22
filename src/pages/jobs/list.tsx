@@ -9,6 +9,7 @@ import { Typography } from "antd";
 import { CreateJobIcon, ViewIcon } from "../../components/Icons";
 import QueuePauseButton from "../../components/QueuePauseButton";
 import { Job } from "../../@types";
+import QueueEmergencyZoneButton from "../../components/QueueEmergencyZoneButton";
 
 const { Paragraph } = Typography;
 
@@ -20,8 +21,6 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
   const params = useParams<{ name: string }>()
   const {search} = useLocation();
   const searchParams = new URLSearchParams(search)
-  const customStyle: React.CSSProperties = { color: token.colorTextBase };
-
   const [jobStatus, setJobStatus] = useState<string>(searchParams.get("status") || "completed");
   const { tableProps, tableQueryResult } = useTable<Job>({
     syncWithLocation: true,
@@ -48,14 +47,11 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
                 type: "push",
               });
             }}
-            style={{
-              color: token.colorTextBase,
-            }}
           >
             Create Job
           </Button>
-
           <QueuePauseButton queueSlug={params.name} />
+          <QueueEmergencyZoneButton queueSlug={params.name}/>
         </>
       )}
     >
@@ -80,7 +76,7 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
           { text: "Failed", value: "failed" },
         ].map((status) => {
           return (
-            <Radio.Button key={status.value} value={status.value} style={customStyle}>
+            <Radio.Button key={status.value} value={status.value}>
               {status.text}
             </Radio.Button>
           );

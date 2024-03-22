@@ -7,10 +7,7 @@ import useWebSocket from "react-use-websocket";
 import { EditIcon, MonitorQueueIcon, NewQueueIcon, ViewIcon, WarningZoneIcon } from "../../components/Icons";
 import QueuePauseButton from "../../components/QueuePauseButton";
 
-const { useToken } = theme;
-
 export const QueuesList: React.FC<IResourceComponentsProps> = () => {
-  const { token } = useToken();
   const go = useGo();
   const { tableProps } = useTable({
     syncWithLocation: true,
@@ -59,9 +56,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
               to: "create",
               type: "push",
             });
-          }}
-          style={{
-            color: token.colorTextBase,
           }}
         >
           Add Queue
@@ -113,9 +107,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
             <div style={{ display: "flex", gap: "4px" }}>
               <Button
                 type="primary"
-                style={{
-                  color: token.colorTextBase,
-                }}
                 icon={<ViewIcon />}
                 onClick={() => {
                   go({
@@ -131,9 +122,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
 
               <Button
                 type="primary"
-                style={{
-                  color: token.colorTextBase,
-                }}
                 icon={<MonitorQueueIcon />}
                 title="Monitor Real-Time"
                 onClick={() => {
@@ -146,9 +134,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
 
               <Button
                 type="primary"
-                style={{
-                  color: token.colorTextBase,
-                }}
                 icon={<EditIcon />}
                 onClick={() => {
                   go({
@@ -165,9 +150,6 @@ export const QueuesList: React.FC<IResourceComponentsProps> = () => {
               <Button
                 type="primary"
                 title="Warning zone"
-                style={{
-                  color: token.colorTextBase,
-                }}
                 icon={<WarningZoneIcon />}
                 onClick={() => {
                   go({

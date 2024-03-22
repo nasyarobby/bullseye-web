@@ -31,10 +31,6 @@ const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = 
                             setIsPausedResp(response.data.isPaused)
                         })
             }}
-
-            style={{
-                color: token.colorTextBase,
-            }}
         >
             {props.hideLabel ?  "" : "Resume Queue"}
         </Button>
@@ -52,9 +48,6 @@ const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = 
                     })
         }}
 
-        style={{
-            color: token.colorTextBase,
-        }}
     >
         {props.hideLabel ? "": "Pause Queue"} 
     </Button>

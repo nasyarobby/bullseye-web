@@ -32,7 +32,7 @@ export const RemoveJobs: React.FC<IResourceComponentsProps> = () => {
                         <Input placeholder="input placeholder" />
                     </Form.Item>
                     <Form.Item>
-                        <Button danger type="primary" {...saveButtonProps}>Submit</Button>
+                        <Button danger type="primary" {...saveButtonProps}>Remove job</Button>
                     </Form.Item>
                 </Space>
             </Card>
