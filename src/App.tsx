@@ -6,10 +6,9 @@ import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
-    AuthPage, ErrorComponent
+    ErrorComponent
     , useNotificationProvider
     , ThemedLayoutV2
-    , ThemedSiderV2
 } from '@refinedev/antd';
 import "@refinedev/antd/dist/reset.css";
 import { SiRedis as RedisIcon } from "react-icons/si";
@@ -28,7 +27,7 @@ import CustomSider from './components/CustomSider';
 import { appDataProvider } from './data-providers';
 import { ConnectionsList } from './pages/connections/list';
 import { ConnectionCreate } from './pages/connections/create';
-import { JobList, JobShow } from './pages/jobs';
+import { JobCreate, JobList, JobShow } from './pages/jobs';
 import { PM2Start } from './pages/pm2/PM2Start';
 import { PM2Connect } from './pages/pm2/PM2Connect';
 import { QueueStats } from './pages/queues/stats';
@@ -112,8 +111,7 @@ function App() {
                                             <Route path="show/:id" element={<BlogPostShow />} />
                                             <Route path=":name" >
                                                 <Route index element={<JobList />} />
-                                                <Route path="create" element={<QueueCreate />} />
-                                                <Route path="edit/:id" element={<QueueEdit />} />
+                                                <Route path="create" element={<JobCreate />} />
                                                 <Route path="job/:id" element={<JobShow />} />
                                             </Route>
                                         </Route>
@@ -152,8 +150,6 @@ function App() {
                                         <Route path="/forgot-password" element={<ForgotPassword />} />
                                     </Route>
                                 </Routes>
-
-
                                 <RefineKbar />
                                 <UnsavedChangesNotifier />
                                 <DocumentTitleHandler />

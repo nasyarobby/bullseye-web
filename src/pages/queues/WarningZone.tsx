@@ -1,23 +1,20 @@
 import { IResourceComponentsProps } from "@refinedev/core";
-import { Button, Row,  } from "antd";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import { CleanQueue } from "./WarningZones/CleanQueue";
+import { RemoveJobs } from "./WarningZones/RemoveJobs";
+import { EmptyQueue } from "./WarningZones/EmptyQueue";
+import { ObliterateQueue } from "./WarningZones/ObliterateQueue";
 
 export const WarningZone: React.FC<IResourceComponentsProps> = () => {
     const params = useParams<{ name: string }>()
-    if(params.name)
-    return <Row gutter={16}>
-        <Button>Remove Jobs</Button>
-        <Button onClick={() => {
-            axios.post("/api/queues/"+params.name+'/empty', {})
-        }}>Empty</Button>
-        <Button onClick={() => {
-            axios.post("/api/queues/"+params.name+'/clean', {status: "completed"})
-        }}>Clean</Button>
-        <Button onClick={() => {
-            axios.post("/api/queues/"+params.name+'/obliterate', {force: false})
-        }}>Obliterate</Button>
-    </Row>
+
+    if (params.name)
+        return <>
+            <RemoveJobs />
+            <EmptyQueue />
+            <CleanQueue />
+            <ObliterateQueue />
+        </>
 
     return null;
 }

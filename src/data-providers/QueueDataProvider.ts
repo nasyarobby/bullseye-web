@@ -15,7 +15,7 @@ type Params = {
 }
 
 interface MyDataProviderInterface<D> {
-    create: (params: CreateParams<Params>) => Promise<CreateResponse<D>>;
+    create: (params: CreateParams<Params> & { meta: { name: string } }) => Promise<CreateResponse<D>>;
     deleteOne: (params: DeleteOneParams<Params>) => Promise<DeleteOneResponse<D>>;
     getApiUrl: () => string;
     getList: (params: GetListParams) => Promise<GetListResponse<D>>;
@@ -55,6 +55,31 @@ const queueDataProvider: DataProviderInitiator = (url) => {
                 .then(handleResponse);
         },
         create: async (params) => {
+
+            if (params.resource === "clean-queue") {
+                return client
+                    .post(`/queues/${params.meta.name}/clean`, params.variables)
+                    .then(handleOne);
+            }
+
+            if (params.resource === "remove-jobs") {
+                return client
+                    .post(`/queues/${params.meta.name}/remove-jobs`, params.variables)
+                    .then(handleOne);
+            }
+
+            if (params.resource === "obliterate") {
+                return client
+                    .post(`/queues/${params.meta.name}/obliterate`, {})
+                    .then(handleOne);
+            }
+
+            if (params.resource === "empty-queue") {
+                return client
+                    .post(`/queues/${params.meta.name}/empty`, params.variables)
+                    .then(handleOne);
+            }
+
             return client
                 .post(`/${params.resource}`, params.variables)
                 .then(handleOne);

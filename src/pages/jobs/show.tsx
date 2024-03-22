@@ -20,7 +20,7 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
     const { data, isLoading } = queryResult;
     const record = data?.data;
     const go = useGo();
-    const {search} = useLocation();
+    const { search } = useLocation();
     const searchParams = new URLSearchParams(search)
 
     if (!record) {
@@ -28,7 +28,7 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
     }
 
     return (
-        <Show isLoading={isLoading} title={`Job ${record.id}`}>
+        <Show isLoading={isLoading} title={`Job ${record.id}`} recordItemId={record.id}>
             {
                 Object.keys(record).map(key => {
                     if (["opts", "data"].includes(key)) {
@@ -41,7 +41,7 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
                     if (key === "returnvalue" || key === "progress") {
                         const data = record[key];
 
-                        if (!data || typeof data === "string") {
+                        if (!data || typeof data === "string" || typeof data === "number") {
                             return <>
                                 <Title level={5}>{key}</Title>
                                 <TextField value={data === null ? "null" : data}></TextField>

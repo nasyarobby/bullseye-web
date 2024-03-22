@@ -71,7 +71,7 @@ const jobDataProvider: DataProviderInitiator = (url) => {
         },
         create: async (params) => {
             return client
-                .post(`/${params.resource}`, params.variables)
+                .post(`/queues/${params.meta.name}/create-job`, params.variables)
                 .then(handleOne);
         },
         update: async (params) => {
@@ -93,7 +93,7 @@ const jobDataProvider: DataProviderInitiator = (url) => {
             return client
                 .get(`/queues/${params.meta.name}/jobs/${params.id}`)
                 .then(handleOne)
-        }
+        },
     };
 };
 

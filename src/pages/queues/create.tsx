@@ -16,8 +16,7 @@ export const QueueCreate: React.FC<IResourceComponentsProps> = () => {
 
     return (
         <Create saveButtonProps={saveButtonProps}>
-            <Form {...formProps} layout="vertical"
-            >
+            <Form {...formProps} layout="vertical">
                 <Form.Item
                     label={"Display name"}
                     name={["friendlyName"]}

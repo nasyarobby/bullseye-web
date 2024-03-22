@@ -7,7 +7,8 @@ import {
     FaTrashAlt as DeleteIcon,
     FaPause as PauseQueueIcon,
     FaPlay as ResumeQueueIcon,
-    FaExclamationTriangle as WarningZoneIcon
+    FaExclamationTriangle as WarningZoneIcon,
+    FaInfoCircle as InfoIcon
 } from "react-icons/fa";
 
 import { LuMonitorPlay as MonitorQueueIcon } from "react-icons/lu";
@@ -24,6 +25,7 @@ export {
     ViewIcon,
     EditIcon,
     DeleteIcon,
+    InfoIcon,
     RedisDisconnectedIcon,
     WarningZoneIcon
 }
