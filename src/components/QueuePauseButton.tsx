@@ -1,13 +1,9 @@
 import React from "react";
 import { PauseQueueIcon, ResumeQueueIcon } from "./Icons";
-import { Button, theme } from "antd";
+import { Button } from "antd";
 import axios from "axios";
 
-const { useToken } = theme;
-
-
 const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = (props) => {
-    const { token } = useToken();
     const [isPausedResp, setIsPausedResp] = React.useState(false)
 
     React.useEffect(() => {
@@ -25,6 +21,7 @@ const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = 
             icon={<ResumeQueueIcon />}
 
             onClick={(e) => {
+                e.preventDefault();
                 if (props.queueSlug)
                     axios.post<{ isPaused: boolean }>('/api/queues/' + props.queueSlug + '/resume')
                         .then(response => {
@@ -32,7 +29,7 @@ const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = 
                         })
             }}
         >
-            {props.hideLabel ?  "" : "Resume Queue"}
+            {props.hideLabel ? "" : "Resume Queue"}
         </Button>
     }
 
@@ -41,6 +38,8 @@ const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = 
         icon={<PauseQueueIcon />}
 
         onClick={(e) => {
+            e.preventDefault();
+
             if (props.queueSlug)
                 axios.post<{ isPaused: boolean }>('/api/queues/' + props.queueSlug + '/pause')
                     .then(response => {
@@ -49,7 +48,7 @@ const QueuePauseButton: React.FC<{ queueSlug?: string, hideLabel?: boolean }> = 
         }}
 
     >
-        {props.hideLabel ? "": "Pause Queue"} 
+        {props.hideLabel ? "" : "Pause Queue"}
     </Button>
 }
 

@@ -1,16 +1,17 @@
 import { useForm } from "@refinedev/antd";
 import { IResourceComponentsProps } from "@refinedev/core";
-import { Button, Card, Form, Input, Radio, Row, Space, } from "antd";
+import { Button, Card, Form, Input, Space, } from "antd";
 import { useParams } from "react-router-dom";
 
 export const RemoveJobs: React.FC<IResourceComponentsProps> = () => {
     const params = useParams<{ name: string }>()
     const { formProps, saveButtonProps } = useForm<
         { id: string, cleaned: boolean, slug: string },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         any,
         { pattern: string }>({
             resource: "remove-jobs",
-            successNotification: (data, values) => {
+            successNotification: () => {
                 return {
                     message: `Jobs has been removed.`,
                     description: 'Success removing jobs',

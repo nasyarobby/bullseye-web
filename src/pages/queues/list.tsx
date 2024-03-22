@@ -1,6 +1,6 @@
 import { useTable, List, DeleteButton } from "@refinedev/antd";
 import { IResourceComponentsProps, useGo } from "@refinedev/core";
-import { Button, Table, Tag, theme } from "antd";
+import { Button, Table, Tag } from "antd";
 
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
