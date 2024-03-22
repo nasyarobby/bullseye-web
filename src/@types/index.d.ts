@@ -355,10 +355,11 @@ export interface Subscribe {
 }
 
 export interface WsLiveQueueProcessingMsgPayload {
-    type: "workers" | "onActive" | "onCompleted" | "onFailed",
+    type: "workers" | "onActive" | "onCompleted" | "onFailed" | "onProgress",
     data: {
-        workers: { name: string, job: string }[]
+        workers: { name: string, job: string, progress: string | null }[]
         id: string
         returnValue: string
+        progress: string
     }
 }

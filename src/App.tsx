@@ -30,7 +30,7 @@ import { ConnectionCreate } from './pages/connections/create';
 import { JobCreate, JobList, JobShow } from './pages/jobs';
 import { PM2Start } from './pages/pm2/PM2Start';
 import { PM2Connect } from './pages/pm2/PM2Connect';
-import { QueueStats } from './pages/queues/stats';
+import { QueueStats } from './pages/queues/LiveQueueProcessing';
 import { ConnectionEdit } from './pages/connections/edit';
 import { WarningZone } from './pages/queues/WarningZone';
 
